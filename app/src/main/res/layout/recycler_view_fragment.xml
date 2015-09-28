@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:andriod="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_RVF"
-        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_of_recyclerView" />
+        android:background="@color/color_of_recyclerView"
+        android:scrollbars="vertical" />
 
-</LinearLayout>
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pb_load_RF"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.myapplication3.app.DB;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by sasha on 28.09.2015.
@@ -86,7 +87,6 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES_GLOBAL_MADEL);
@@ -96,6 +96,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ENTRIES_CURRENCIES_REAL);
         db.execSQL(SQL_CREATE_ENTRIES_REGION_REAL);
         db.execSQL(SQL_CREATE_ENTRIES_CITIES_REAL);
+        Log.d("qqq", "create all tables");
 
     }
 

@@ -83,8 +83,7 @@ public class DetailFragment extends Fragment {
 
     private void addLlInCardView() {
 
-        List<Currency> currencyList = mOrganization.getCurrencies();
-
+        List<Currency> currencyList = mOrganization.getCurrenciesReal();
 
         for (Currency item : currencyList) {
             View mLlCurrencyItem = getActivity().getLayoutInflater().inflate(R.layout.currency_item, null);

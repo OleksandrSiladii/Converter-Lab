@@ -26,12 +26,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private static MyClickListener myClickListener;
 
 
-    // класс view holder-а с помощью которого мы получаем ссылку на каждый элемент
-    // отдельного пункта списка
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        // наш пункт состоит только из одного TextView
-        public TextView mBankName;
+                public TextView mBankName;
         public TextView mRegion;
         public TextView mCity;
         public TextView mPhone;
@@ -61,27 +58,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-    // Конструктор
     public RecyclerAdapter(GlobalModel _globalModel) {
         mGlobalModel = _globalModel;
         mOrganizationList = mGlobalModel.getOrganizations();
     }
 
-    // Создает новые views (вызывается layout manager-ом)
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                          int viewType) {
-        // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item, parent, false);
 
-        // тут можно программно менять атрибуты лэйаута (size, margins, paddings и др.)
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
-    // Заменяет контент отдельного view (вызывается layout manager-ом)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
@@ -103,7 +95,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     }
 
-    // Возвращает размер данных (вызывается layout manager-ом)
     @Override
     public int getItemCount() {
 

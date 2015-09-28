@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.adapters.RecyclerAdapter;
 import com.example.myapplication3.app.models.GlobalModel;
@@ -34,6 +36,8 @@ public class RecyclerViewFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private GlobalModel mGlobalModel;
     private OnFragmentInteractionListener mListener;
+    private ProgressBar mProgressBarLoad;
+    private DBWorker mDBWorker;
 
 
     @Override
@@ -41,17 +45,16 @@ public class RecyclerViewFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.recycler_view_fragment, container, false);
 
-        getGlobalModel();
-
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
-
+        mProgressBarLoad = (ProgressBar) rootView.findViewById(R.id.pb_load_RF);
+        mDBWorker = new DBWorker();
 
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-
+        getGlobalModel();
         return rootView;
     }
 
@@ -63,41 +66,12 @@ public class RecyclerViewFragment extends Fragment {
             public void success(GlobalModel globalModel, Response response) {
                 globalModel.deresialize();
 
-//                for (Organization item : globalModel.getOrganizations()) {
-//                    Log.d("", item.getCurrencies().get(0).getAsk());
-//                    Log.d("qq", item.getAddress());
-//                }
-                mGlobalModel = globalModel;
-                mAdapter = new RecyclerAdapter(mGlobalModel);
-
-                mRecyclerView.setAdapter(mAdapter);
-                ((RecyclerAdapter) mAdapter).setOnItemClickListener(new RecyclerAdapter.MyClickListener() {
-
-                    @Override
-                    public void onItemClick(int position, View view) {
-
-
-                        switch (view.getId()) {
-                            case R.id.iv_link_RI:
-                                goToLink(position);
-                                break;
-                            case R.id.iv_map_RI:
-                                mListener.goMapsFragment(mGlobalModel, position);
-                                break;
-                            case R.id.iv_phone_RI:
-                                callToPhone(position);
-                                break;
-                            case R.id.iv_next_RI:
-                                Log.d("qqq", "next");
-                                mListener.goDetailFragment(mGlobalModel, position);
-                                break;
-                        }
-                    }
-                });
+                setModelInRecyclerView(mDBWorker.addNewGlobalModelToDB(getActivity(),globalModel));
             }
 
             @Override
             public void failure(RetrofitError error) {
+                setModelInRecyclerView(mDBWorker.getGlobalModelFromDB(getActivity()));
             }
         });
 
@@ -125,11 +99,45 @@ public class RecyclerViewFragment extends Fragment {
         startActivity(intent);
     }
 
+    public void setModelInRecyclerView(GlobalModel globalModel) {
+        mGlobalModel = globalModel;
+
+        mAdapter = new RecyclerAdapter(mGlobalModel);
+        mProgressBarLoad.setVisibility(View.INVISIBLE);
+
+        mRecyclerView.setAdapter(mAdapter);
+        ((RecyclerAdapter) mAdapter).setOnItemClickListener(new RecyclerAdapter.MyClickListener() {
+
+            @Override
+            public void onItemClick(int position, View view) {
+
+
+                switch (view.getId()) {
+                    case R.id.iv_link_RI:
+                        goToLink(position);
+                        break;
+                    case R.id.iv_map_RI:
+                        mListener.goMapsFragment(mGlobalModel, position);
+                        break;
+                    case R.id.iv_phone_RI:
+                        callToPhone(position);
+                        break;
+                    case R.id.iv_next_RI:
+                        Log.d("qqq", "next");
+                        mListener.goDetailFragment(mGlobalModel, position);
+                        break;
+                }
+            }
+        });
+    }
+
     public interface OnFragmentInteractionListener {
 
         public void goDetailFragment(GlobalModel globalModel, int position);
-        public void goMapsFragment (GlobalModel globalModel, int position);
+
+        public void goMapsFragment(GlobalModel globalModel, int position);
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

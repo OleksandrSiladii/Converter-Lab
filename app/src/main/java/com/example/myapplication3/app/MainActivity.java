@@ -2,7 +2,6 @@ package com.example.myapplication3.app;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.hardware.fingerprint.FingerprintManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,9 +18,6 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
 
     private FragmentTransaction mFragmentTransaction;
     private FragmentManager mFragmentManager;
-    private RecyclerViewFragment recyclerViewFragment;
-    private DetailFragment detailFragment;
-    private MapsFragment mapsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +28,7 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
 
         mFragmentManager = getFragmentManager();
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        recyclerViewFragment = new RecyclerViewFragment();
+        RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
         mFragmentTransaction.add(R.id.frgCont, recyclerViewFragment);
         mFragmentTransaction.addToBackStack("stack");
         mFragmentTransaction.commit();
@@ -46,7 +42,7 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
         args.putInt(GlobalModel.TAG_POSITION, position);
 
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        detailFragment = new DetailFragment();
+        DetailFragment detailFragment = new DetailFragment();
         detailFragment.setArguments(args);
         mFragmentTransaction.replace(R.id.frgCont, detailFragment);
         mFragmentTransaction.addToBackStack("stack");
@@ -60,7 +56,7 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
         args.putInt(GlobalModel.TAG_POSITION, position);
 
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        mapsFragment = new MapsFragment();
+        MapsFragment mapsFragment = new MapsFragment();
         mapsFragment.setArguments(args);
         mFragmentTransaction.replace(R.id.frgCont, mapsFragment);
         mFragmentTransaction.addToBackStack("stack");
