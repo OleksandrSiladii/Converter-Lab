@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue">#ffacbec6</color>
+    <color name="black">#ff000000</color>
+    <color name="color_of_cardView">#fff9f9f9</color>
+    <color name="color_of_recyclerView">#ffededed</color>
+    <color name="color_of_bank_name">#ffc21160</color>
+    <color name="color_green_up">#ff0d4542</color>
+    <color name="color_red_down">#ff75153b</color>
+</resources>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">My Application 3</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="tel">Тел :  </string>
+    <string name="address">Адрес :  </string>
+    <string name="name_of_currency">Название валют </string>
+    <string name="buy_sell">покупка / \n продажа  </string>
+    <string name="title_activity_maps_fragment">Map</string>
+</resources>

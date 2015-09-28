@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/card_view_margin"
+    android:layout_marginLeft="@dimen/card_view_margin"
+    android:layout_marginRight="@dimen/card_view_margin"
+    card_view:cardBackgroundColor="@color/blue"
+    card_view:cardCornerRadius="@dimen/card_corner_radius">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rr_info_RI"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_of_cardView">
+
+            <TextView
+                android:id="@+id/tv_bank_name_RI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:paddingLeft="@dimen/padding_in_card_view_to_text"
+                android:paddingTop="@dimen/padding_in_card_view_to_text"
+                android:text="Bank name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_region_RI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tv_bank_name_RI"
+                android:paddingLeft="10dp"
+                android:text="region"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_18sp" />
+
+            <TextView
+                android:id="@+id/tv_city_RI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tv_region_RI"
+                android:paddingLeft="@dimen/padding_in_card_view_to_text"
+                android:text="city"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_18sp" />
+
+            <TextView
+                android:id="@+id/tv_phone_RI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_city_RI"
+                android:paddingRight="10dp"
+                android:text="000000000"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tv_phone_RI"
+                android:layout_toLeftOf="@+id/tv_phone_RI"
+                android:layout_toStartOf="@+id/tv_phone_RI"
+                android:text="@string/tel"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_16sp" />
+
+            <TextView
+                android:id="@+id/tv_address_RI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_phone_RI"
+                android:paddingRight="10dp"
+                android:text="street address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tv_address_RI"
+                android:layout_toLeftOf="@+id/tv_address_RI"
+                android:layout_toStartOf="@+id/tv_address_RI"
+                android:text="@string/address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_16sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/tv_address_RI"
+            android:background="@color/blue"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_link_RI"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/ic_link"
+                android:clickable="true"/>
+
+            <ImageView
+                android:id="@+id/iv_map_RI"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/ic_map"
+                android:clickable="true"/>
+
+            <ImageView
+                android:id="@+id/iv_phone_RI"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/ic_phone"
+                android:clickable="true"/>
+
+            <ImageView
+                android:id="@+id/iv_next_RI"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:src="@drawable/ic_next"
+                android:clickable="true"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
