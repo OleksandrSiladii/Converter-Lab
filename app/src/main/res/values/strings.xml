@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application 3</string>
+    <string name="app_name">Converter Lab</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -8,4 +8,6 @@
     <string name="name_of_currency">Название валют </string>
     <string name="buy_sell">покупка / \n продажа  </string>
     <string name="title_activity_maps_fragment">Map</string>
+    <string name="error_load">невозможно загрузить свежые данные</string>
+    <string name="ok_load">данные обновлены</string>
 </resources>

@@ -1,9 +1,10 @@
 package com.example.myapplication3.app;
 
-import android.app.FragmentManager;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,22 +17,20 @@ import com.example.myapplication3.app.models.GlobalModel;
 
 public class MainActivity extends ActionBarActivity implements RecyclerViewFragment.OnFragmentInteractionListener {
 
-    private FragmentTransaction mFragmentTransaction;
-    private FragmentManager mFragmentManager;
+
+    private RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
+    private DetailFragment detailFragment = new DetailFragment();
+    private MapsFragment mapsFragment = new MapsFragment();
+    private Fragment mFragment = recyclerViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
 
-        mFragmentManager = getFragmentManager();
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
-        mFragmentTransaction.add(R.id.frgCont, recyclerViewFragment);
-        mFragmentTransaction.addToBackStack("stack");
-        mFragmentTransaction.commit();
+        addFragment(mFragment);
     }
 
     @Override
@@ -40,13 +39,9 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
         Bundle args = new Bundle();
         args.putSerializable(GlobalModel.TAG_GLOBAL_MODEL, globalModel);
         args.putInt(GlobalModel.TAG_POSITION, position);
-
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        DetailFragment detailFragment = new DetailFragment();
         detailFragment.setArguments(args);
-        mFragmentTransaction.replace(R.id.frgCont, detailFragment);
-        mFragmentTransaction.addToBackStack("stack");
-        mFragmentTransaction.commit();
+
+        addFragment(detailFragment);
     }
 
     @Override
@@ -54,16 +49,26 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
         Bundle args = new Bundle();
         args.putSerializable(GlobalModel.TAG_GLOBAL_MODEL, globalModel);
         args.putInt(GlobalModel.TAG_POSITION, position);
-
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        MapsFragment mapsFragment = new MapsFragment();
         mapsFragment.setArguments(args);
-        mFragmentTransaction.replace(R.id.frgCont, mapsFragment);
-        mFragmentTransaction.addToBackStack("stack");
-        mFragmentTransaction.commit();
+
+        addFragment(mapsFragment);
     }
 
-//    @Override
+    private void addFragment(Fragment fragment) {
+        Log.d("qqq", "replace Fragment");
+
+        if (!(fragment.isVisible())) {
+//            fragment.setRetainInstance(true);
+            mFragment = fragment;
+            FragmentTransaction mFragmentTransaction = getFragmentManager().beginTransaction();
+            mFragmentTransaction.setCustomAnimations(R.animator.add_frag_animator, R.animator.rem_frag_animator);
+            mFragmentTransaction.replace(R.id.frgCont, fragment, "my_fragment");
+            mFragmentTransaction.addToBackStack(null);
+            mFragmentTransaction.commit();
+        }
+    }
+
+    //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -84,4 +89,12 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
 //
 //        return super.onOptionsItemSelected(item);
 //    }
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

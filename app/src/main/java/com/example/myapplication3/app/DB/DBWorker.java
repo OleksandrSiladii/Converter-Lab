@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
@@ -26,6 +28,8 @@ public class DBWorker {
     private SQLiteDatabase mDB;
     private ContentValues mContentValues;
     private Cursor cursor, cursor2;
+    private List<Currency> mCurrencies;
+    private Currency mCurrency;
 
     public GlobalModel addNewGlobalModelToDB(Context _context, GlobalModel _globalModel) {
 
@@ -33,14 +37,18 @@ public class DBWorker {
 
         mDB = mDBHelper.getReadableDatabase();
         cursor = mDB.query(DBHelper.TABLE_NAME_GLOBAL_MADEL, null, null, null, null, null, null);
-//    String data = cursor.getString(cursor.getColumnIndex(DBHelper.DATA));
 
         if (cursor.getCount() < 1) {
             addGlobalModelToDB(_context, _globalModel);
             Log.d("qqq", "create new DB : " + cursor.getCount());
-        } else {
+        } else { Log.d("qqq", "cursor : " + cursor.getCount());
+            cursor.moveToFirst();
             if (!cursor.getString(cursor.getColumnIndex(DBHelper.DATA)).equals(_globalModel.getDate())) {
+                Toast.makeText(_context, R.string.ok_load, Toast.LENGTH_SHORT).show();
+
                 Log.d("qqq", "add new data to DB");
+                Log.d("qqq", "data in old DB: "+ cursor.getString(cursor.getColumnIndex(DBHelper.DATA)));
+                Log.d("qqq", "data in model: " + _globalModel.getDate());
 
                 mDB = mDBHelper.getWritableDatabase();
                 mDB.delete(DBHelper.TABLE_NAME_GLOBAL_MADEL, null, null);
@@ -52,7 +60,7 @@ public class DBWorker {
                 mDB.delete(DBHelper.TABLE_NAME_CITIES_REAL, null, null);
 
                 addGlobalModelToDB(_context, _globalModel);
-            }
+            } else { Log.d("qqq", "DB and Model is same");}
         }
         mDB.close();
         return _globalModel;
@@ -89,7 +97,7 @@ public class DBWorker {
             for (Currency currency : organization.getCurrenciesReal()) {
 
                 mContentValues = new ContentValues();
-                mContentValues.put(DBHelper.TITLE, organization.getTitle());
+                mContentValues.put(DBHelper.ID, organization.getId());
                 mContentValues.put(DBHelper.NAME_CURRENCY, currency.getName());
                 mContentValues.put(DBHelper.ASK, currency.getAsk());
                 mContentValues.put(DBHelper.BID, currency.getBid());
@@ -106,7 +114,7 @@ public class DBWorker {
             mDB.insert(DBHelper.TABLE_NAME_ORG_TYPES_REAL, null, mContentValues);
         }
 
-        for (PairedObject currenciesReal : mGlobalModel.getOrgTypes()) {
+        for (PairedObject currenciesReal : mGlobalModel.getCurrenciesReal()) {
             mContentValues = new ContentValues();
             mContentValues.put(DBHelper.NAME, currenciesReal.getName());
             mContentValues.put(DBHelper.ID, currenciesReal.getId());
@@ -114,7 +122,7 @@ public class DBWorker {
             mDB.insert(DBHelper.TABLE_NAME_CURRENCIES_REAL, null, mContentValues);
         }
 
-        for (PairedObject regionsReal : mGlobalModel.getOrgTypes()) {
+        for (PairedObject regionsReal : mGlobalModel.getRegionsReal()) {
             mContentValues = new ContentValues();
             mContentValues.put(DBHelper.NAME, regionsReal.getName());
             mContentValues.put(DBHelper.ID, regionsReal.getId());
@@ -122,7 +130,7 @@ public class DBWorker {
             mDB.insert(DBHelper.TABLE_NAME_REGIONS_REAL, null, mContentValues);
         }
 
-        for (PairedObject citiesReal : mGlobalModel.getOrgTypes()) {
+        for (PairedObject citiesReal : mGlobalModel.getCitiesReal()) {
             mContentValues = new ContentValues();
             mContentValues.put(DBHelper.NAME, citiesReal.getName());
             mContentValues.put(DBHelper.ID, citiesReal.getId());
@@ -130,6 +138,7 @@ public class DBWorker {
             mDB.insert(DBHelper.TABLE_NAME_CITIES_REAL, null, mContentValues);
         }
         mDB.close();
+        showLogs();
     }
 
     public GlobalModel getGlobalModelFromDB(Context _context) {
@@ -138,7 +147,6 @@ public class DBWorker {
         mDBHelper = new DBHelper(mContext);
 
         mDB = mDBHelper.getReadableDatabase();
-
 
         cursor = mDB.query(DBHelper.TABLE_NAME_GLOBAL_MADEL, null, null, null, null, null, null);
 
@@ -172,25 +180,26 @@ public class DBWorker {
                     mOrganization.setLink(cursor.getString(cursor.getColumnIndex(DBHelper.LINK)));
                     mOrganization.setAddress(cursor.getString(cursor.getColumnIndex(DBHelper.ADDRESS)));
 
-                    List<Currency> currencies = new ArrayList<Currency>();
+                    mCurrencies = new ArrayList<Currency>();
                     if (cursor2.moveToFirst()) {
                         try {
                             do {
-                                String title = cursor2.getString(cursor2.getColumnIndex(DBHelper.TITLE));
+                                String id = cursor2.getString(cursor2.getColumnIndex(DBHelper.ID));
 
-                                if (title.equals(mOrganization.getTitle())) {
-                                    Currency currency = new Currency();
-                                    currency.setAsk(cursor2.getString(cursor2.getColumnIndex(DBHelper.ASK)));
-                                    currency.setBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.BID)));
-                                    currencies.add(currency);
+                                if (id.equals(mOrganization.getId())) {
+                                    mCurrency = new Currency();
+                                    mCurrency.setName(cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME)));
+                                    mCurrency.setAsk(cursor2.getString(cursor2.getColumnIndex(DBHelper.ASK)));
+                                    mCurrency.setBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.BID)));
+                                    mCurrencies.add(mCurrency);
                                 }
 
-                            } while (cursor.moveToNext());
+                            } while (cursor2.moveToNext());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                    mOrganization.setCurrenciesReal(currencies);
+                    mOrganization.setCurrenciesReal(mCurrencies);
 
                     organizations.add(mOrganization);
 
@@ -286,6 +295,36 @@ public class DBWorker {
         mGlobalModel.setCitiesReal(citiesReal);
         mDB.close();
         return mGlobalModel;
+    }
+
+    private void showLogs() {
+        mDB = mDBHelper.getReadableDatabase();
+        Cursor cursor = mDB.query(DBHelper.TABLE_NAME_ORGANIZATION, null, null, null, null, null, null);
+        Cursor cursor2 = mDB.query(DBHelper.TABLE_NAME_CURRENCY, null, null, null, null, null, null);
+        if (cursor.moveToFirst()){
+            Log.d("qqq", "size: " + cursor.getCount());
+            do{
+                Log.d("qqq","name:"+ cursor.getString(cursor.getColumnIndex(DBHelper.TITLE)) );
+
+                if(cursor2.moveToFirst()){
+                    do{
+                        if (cursor.getString(cursor.getColumnIndex(DBHelper.ID))
+                                .equals(cursor2.getString(cursor2.getColumnIndex(DBHelper.ID))))
+                            Log.d("qqq","carency: "+ cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME_CURRENCY)) );
+
+                    }while (cursor2.moveToNext());
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor = mDB.query(DBHelper.TABLE_NAME_REGIONS_REAL, null, null, null, null, null, null);
+    if(cursor.moveToFirst()){
+        do {
+            Log.d("qqq", "name: " + cursor.getString(cursor.getColumnIndex(DBHelper.NAME)));
+            Log.d("qqq", "Id: " + cursor.getString(cursor.getColumnIndex(DBHelper.ID)));
+        } while (cursor.moveToNext());
+    }
+
+        mDB.close();
     }
 
 

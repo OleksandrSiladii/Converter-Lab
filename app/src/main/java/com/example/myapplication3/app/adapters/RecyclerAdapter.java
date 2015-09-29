@@ -79,15 +79,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         mOrganization = mOrganizationList.get(position);
 
-        String region = getRealName(mGlobalModel.getRegions(), mOrganization.getRegionId());
-        String city = getRealName(mGlobalModel.getCities(), mOrganization.getCityId());
+        String region = getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
+        String city = getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
         holder.mPhone.setText(mOrganization.getPhone());
         holder.mAddress.setText(mOrganization.getAddress());
         holder.mBankName.setText(mOrganization.getTitle());
         holder.mRegion.setText(region);
 
         if (!region.equals(city)) {
-            holder.mCity.setText(getRealName(mGlobalModel.getCities(), mOrganization.getCityId()));
+            holder.mCity.setText(getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId()));
         }
         else {
             holder.mCity.setText("");

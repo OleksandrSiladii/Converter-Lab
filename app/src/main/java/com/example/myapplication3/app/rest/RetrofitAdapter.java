@@ -20,8 +20,8 @@ public abstract class RetrofitAdapter {
 
         if (retrofitInterface == null) {
             OkHttpClient client = new OkHttpClient();
-            client.setConnectTimeout(30, TimeUnit.SECONDS); // connect timeout
-            client.setReadTimeout(30, TimeUnit.SECONDS);
+            client.setConnectTimeout(10, TimeUnit.SECONDS); // connect timeout
+            client.setReadTimeout(10, TimeUnit.SECONDS);
 
             restAdapter = new RestAdapter.Builder().setEndpoint(ApiConstants.SERVER_URL).setClient(new OkClient
                     (client)).build();

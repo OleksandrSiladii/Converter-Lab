@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.R;
@@ -39,7 +40,6 @@ public class RecyclerViewFragment extends Fragment {
     private ProgressBar mProgressBarLoad;
     private DBWorker mDBWorker;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -54,6 +54,7 @@ public class RecyclerViewFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        setModelInRecyclerView(mDBWorker.getGlobalModelFromDB(getActivity()));
         getGlobalModel();
         return rootView;
     }
@@ -66,12 +67,12 @@ public class RecyclerViewFragment extends Fragment {
             public void success(GlobalModel globalModel, Response response) {
                 globalModel.deresialize();
 
-                setModelInRecyclerView(mDBWorker.addNewGlobalModelToDB(getActivity(),globalModel));
+                setModelInRecyclerView(mDBWorker.addNewGlobalModelToDB(getActivity(), globalModel));
             }
 
             @Override
             public void failure(RetrofitError error) {
-                setModelInRecyclerView(mDBWorker.getGlobalModelFromDB(getActivity()));
+                Toast.makeText(getActivity(), R.string.error_load, Toast.LENGTH_SHORT).show();
             }
         });
 

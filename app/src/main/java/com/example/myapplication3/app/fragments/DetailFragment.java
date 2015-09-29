@@ -9,14 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.myapplication3.app.R;
-import com.example.myapplication3.app.adapters.RecyclerAdapter;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.models.PairedObject;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by sasha on 22.09.2015.
@@ -55,8 +53,8 @@ public class DetailFragment extends Fragment {
     public String getInformation() {
 
         String address = mOrganization.getAddress();
-        String region = getRealName(mGlobalModel.getRegions(), mOrganization.getRegionId());
-        String city = getRealName(mGlobalModel.getCities(), mOrganization.getCityId());
+        String region = getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
+        String city = getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
         String phoneNumber = mOrganization.getPhone();
 
         String allInformation = region + "\n";
@@ -92,7 +90,7 @@ public class DetailFragment extends Fragment {
             TextView tvSell = (TextView) mLlCurrencyItem.findViewById(R.id.tv_sell_CI);
             tvBuy.setText(item.getAsk());
             tvSell.setText(item.getBid());
-            tvCurrency.setText(getRealName(mGlobalModel.getCurrencies(), item.getName()));
+            tvCurrency.setText(getRealName(mGlobalModel.getCurrenciesReal(), item.getName()));
             mLlContainerForCurrency.addView(mLlCurrencyItem);
 
         }

@@ -72,7 +72,7 @@ public class GlobalModel implements Serializable {
         this.orgTypesReal = orgTypesReal;
     }
 
-    public List<PairedObject> getCurrencies() {
+    public List<PairedObject> getCurrenciesReal() {
         return currenciesReal;
     }
 
@@ -80,7 +80,7 @@ public class GlobalModel implements Serializable {
         this.currenciesReal = currenciesReal;
     }
 
-    public List<PairedObject> getRegions() {
+    public List<PairedObject> getRegionsReal() {
         return regionsReal;
     }
 
@@ -88,7 +88,7 @@ public class GlobalModel implements Serializable {
         this.regionsReal = regionsReal;
     }
 
-    public List<PairedObject> getCities() {
+    public List<PairedObject> getCitiesReal() {
         return citiesReal;
     }
 

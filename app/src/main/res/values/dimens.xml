@@ -6,6 +6,6 @@
     <dimen name="font_size_18sp">18sp</dimen>
     <dimen name="font_size_16sp">16sp</dimen>
     <dimen name="font_size_20sp">20sp</dimen>
-    <dimen name="card_corner_radius">3dp</dimen>
+    <dimen name="card_corner_radius">0dp</dimen>
     <dimen name="padding_in_card_view_to_text">10dp</dimen>
 </resources>

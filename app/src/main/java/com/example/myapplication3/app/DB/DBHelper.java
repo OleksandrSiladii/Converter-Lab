@@ -58,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES_CURRENCY = "CREATE TABLE "
             + TABLE_NAME_CURRENCY + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + TITLE + " TEXT,"
+            + ID + " TEXT,"
             + NAME_CURRENCY + " TEXT,"
             + ASK + " TEXT,"
             + BID + " TEXT);";
