@@ -138,7 +138,7 @@ public class DBWorker {
             mDB.insert(DBHelper.TABLE_NAME_CITIES_REAL, null, mContentValues);
         }
         mDB.close();
-        showLogs();
+//        showLogs();
     }
 
     public GlobalModel getGlobalModelFromDB(Context _context) {
