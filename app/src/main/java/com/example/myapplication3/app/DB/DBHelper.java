@@ -33,7 +33,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String LINK = "link";
     public static final String NAME_CURRENCY = "name";
     public static final String ASK = "ask";
+    public static final String PREVIOUS_ASK = "previous_ask";
     public static final String BID = "bid";
+    public static final String PREVIOUS_BID = "previous_bid";
     public static final String NAME = "name";
     public static final String SOURCE_ID = "sourceId";
     public static final String DATA = "data";
@@ -61,6 +63,8 @@ public class DBHelper extends SQLiteOpenHelper {
             + ID + " TEXT,"
             + NAME_CURRENCY + " TEXT,"
             + ASK + " TEXT,"
+            + PREVIOUS_ASK + " TEXT,"
+            + PREVIOUS_BID + " TEXT,"
             + BID + " TEXT);";
 
     private static final String SQL_CREATE_ENTRIES_ORG_TYPES_REAL = "CREATE TABLE "

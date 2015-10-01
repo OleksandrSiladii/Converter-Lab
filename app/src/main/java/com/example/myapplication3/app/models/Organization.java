@@ -2,10 +2,7 @@ package com.example.myapplication3.app.models;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.annotations.SerializedName;
-import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +34,7 @@ public class Organization  {
         for (PairedObject item : list) {
             Currency.CurrencySmall small = new Gson().fromJson(item.getName(),  Currency.CurrencySmall.class);
             Currency currency = new Currency();
-            currency.setName(item.getId());
+            currency.setNameCurrency(item.getId());
             currency.setAsk(small.getAsk());
             currency.setBid(small.getBid());
             currenciesReal.add(currency);

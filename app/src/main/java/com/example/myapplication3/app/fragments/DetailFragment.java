@@ -2,9 +2,11 @@ package com.example.myapplication3.app.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +15,8 @@ import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.models.PairedObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -23,7 +27,6 @@ public class DetailFragment extends Fragment {
 
     private GlobalModel mGlobalModel;
     private Organization mOrganization;
-    private int position;
 
     TextView mTvBankName;
     TextView mTvInformation;
@@ -37,9 +40,10 @@ public class DetailFragment extends Fragment {
         mTvInformation = (TextView) rootView.findViewById(R.id.tv_information_SF);
         mLlContainerForCurrency = (LinearLayout) rootView.findViewById(R.id.ll_container_for_currency_SR);
 
-        Bundle args = getArguments();
-        mGlobalModel = (GlobalModel) args.getSerializable(GlobalModel.TAG_GLOBAL_MODEL);
-        position = args.getInt(GlobalModel.TAG_POSITION);
+        Bundle bundle = getArguments();
+        Gson gson = new GsonBuilder().create();
+        mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
+        int position = bundle.getInt(GlobalModel.TAG_POSITION);
 
         mOrganization = mGlobalModel.getOrganizations().get(position);
 
@@ -50,7 +54,7 @@ public class DetailFragment extends Fragment {
         return rootView;
     }
 
-    public String getInformation() {
+    private String getInformation() {
 
         String address = mOrganization.getAddress();
         String region = getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
@@ -64,6 +68,7 @@ public class DetailFragment extends Fragment {
 
         allInformation = allInformation + getActivity().getString(R.string.address) + " " + address + "\n"
                 + getActivity().getString(R.string.tel) + " " + phoneNumber;
+
 
         return allInformation;
     }
@@ -88,11 +93,32 @@ public class DetailFragment extends Fragment {
             TextView tvCurrency = (TextView) mLlCurrencyItem.findViewById(R.id.tv_currency_name_CI);
             TextView tvBuy = (TextView) mLlCurrencyItem.findViewById(R.id.tv_buy_CI);
             TextView tvSell = (TextView) mLlCurrencyItem.findViewById(R.id.tv_sell_CI);
+            ImageView ivSell = (ImageView) mLlCurrencyItem.findViewById(R.id.iv_sell_CI);
+            ImageView ivBuy = (ImageView) mLlCurrencyItem.findViewById(R.id.iv_buy_CI);
             tvBuy.setText(item.getAsk());
             tvSell.setText(item.getBid());
-            tvCurrency.setText(getRealName(mGlobalModel.getCurrenciesReal(), item.getName()));
-            mLlContainerForCurrency.addView(mLlCurrencyItem);
+            tvCurrency.setText(getRealName(mGlobalModel.getCurrenciesReal(), item.getNameCurrency()));
 
+//            float ask = Float.parseFloat(item.getAsk());
+//            float olgAsk = Float.parseFloat(item.getPreviousAck());
+//            float bid = Float.parseFloat(item.getBid());
+//            float olgBid = Float.parseFloat(item.getPreviousBid());
+//            if (bid < olgBid) {
+//                tvSell.setTextColor(getResources().getColor(R.color.color_red_down));
+//                ivSell.setImageResource(R.drawable.ic_red_arrow_down);
+//            } else {
+//                tvSell.setTextColor(getResources().getColor(R.color.color_green_up));
+//                ivSell.setImageResource(R.drawable.ic_green_arrow_up);
+//            }
+//            if (ask < olgAsk) {
+//                tvBuy.setTextColor(getResources().getColor(R.color.color_red_down));
+//                ivBuy.setImageResource(R.drawable.ic_red_arrow_down);
+//            } else {
+//                tvBuy.setTextColor(getResources().getColor(R.color.color_green_up));
+//                ivBuy.setImageResource(R.drawable.ic_green_arrow_up);
+//            }
+
+            mLlContainerForCurrency.addView(mLlCurrencyItem);
         }
     }
 }

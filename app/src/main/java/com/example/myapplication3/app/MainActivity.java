@@ -2,54 +2,86 @@ package com.example.myapplication3.app;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 
-import butterknife.ButterKnife;
-
+import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.fragments.DetailFragment;
 import com.example.myapplication3.app.fragments.MapsFragment;
 import com.example.myapplication3.app.fragments.RecyclerViewFragment;
 import com.example.myapplication3.app.models.GlobalModel;
+import com.example.myapplication3.app.service.UpdatingService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-public class MainActivity extends ActionBarActivity implements RecyclerViewFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener {
 
 
-    private RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
+    private RecyclerViewFragment recyclerViewFragment;
     private DetailFragment detailFragment = new DetailFragment();
     private MapsFragment mapsFragment = new MapsFragment();
-    private Fragment mFragment = recyclerViewFragment;
+    private BroadcastReceiver mBroadcastReceiver;
+    private DBWorker mDBWorker;
+    private Bundle mBundle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDBWorker = new DBWorker(this);
+
 //        ButterKnife.bind(this);
 
-        addFragment(mFragment);
+        goRecyclerViewFragment(mDBWorker.getGlobalModelFromDB());
+
+
+        startUpdatingService();
+//        regBroadcastReceiver();
+    }
+
+    private void startUpdatingService() {
+
+        Intent intent = new Intent(this, UpdatingService.class);
+        startService(intent);
+    }
+
+    private void goRecyclerViewFragment(GlobalModel globalModelFromDB) {
+        mBundle = new Bundle();
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(globalModelFromDB);
+        mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
+        recyclerViewFragment = new RecyclerViewFragment();
+        recyclerViewFragment.setArguments(mBundle);
+        addFragment(recyclerViewFragment);
     }
 
     @Override
     public void goDetailFragment(GlobalModel globalModel, int position) {
 
-        Bundle args = new Bundle();
-        args.putSerializable(GlobalModel.TAG_GLOBAL_MODEL, globalModel);
-        args.putInt(GlobalModel.TAG_POSITION, position);
-        detailFragment.setArguments(args);
+        mBundle = new Bundle();
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(globalModel);
+        mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
+        mBundle.putInt(GlobalModel.TAG_POSITION, position);
+        detailFragment.setArguments(mBundle);
 
         addFragment(detailFragment);
     }
 
     @Override
     public void goMapsFragment(GlobalModel globalModel, int position) {
-        Bundle args = new Bundle();
-        args.putSerializable(GlobalModel.TAG_GLOBAL_MODEL, globalModel);
-        args.putInt(GlobalModel.TAG_POSITION, position);
-        mapsFragment.setArguments(args);
+        mBundle = new Bundle();
+        mBundle.putSerializable(GlobalModel.TAG_GLOBAL_MODEL, globalModel);
+        mBundle.putInt(GlobalModel.TAG_POSITION, position);
+        mapsFragment.setArguments(mBundle);
 
         addFragment(mapsFragment);
     }
@@ -59,7 +91,7 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
 
         if (!(fragment.isVisible())) {
 //            fragment.setRetainInstance(true);
-            mFragment = fragment;
+
             FragmentTransaction mFragmentTransaction = getFragmentManager().beginTransaction();
             mFragmentTransaction.setCustomAnimations(R.animator.add_frag_animator, R.animator.rem_frag_animator);
             mFragmentTransaction.replace(R.id.frgCont, fragment, "my_fragment");
@@ -68,27 +100,13 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
         }
     }
 
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
@@ -96,5 +114,10 @@ public class MainActivity extends ActionBarActivity implements RecyclerViewFragm
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

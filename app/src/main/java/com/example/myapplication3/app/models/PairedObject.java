@@ -1,11 +1,13 @@
 package com.example.myapplication3.app.models;
 
+import java.io.Serializable;
+
 /**
  * Created by omar on 9/22/15.
  */
 public class PairedObject {
     private String name;
-    private String  id;
+    private String id;
 
     public String getName() {
         return name;

@@ -25,52 +25,61 @@ public class DBWorker {
     private DBHelper mDBHelper;
     private GlobalModel mGlobalModel;
     private Organization mOrganization;
-    private SQLiteDatabase mDB;
+    private SQLiteDatabase mDB, mDB2, mDB3;
     private ContentValues mContentValues;
     private Cursor cursor, cursor2;
     private List<Currency> mCurrencies;
     private Currency mCurrency;
 
-    public GlobalModel addNewGlobalModelToDB(Context _context, GlobalModel _globalModel) {
+    public DBWorker(Context context){
+        mContext = context;
+    }
 
-        mDBHelper = new DBHelper(_context);
+    public GlobalModel addNewGlobalModelToDB(GlobalModel _globalModel) {
+
+        mDBHelper = new DBHelper(mContext);
+        mGlobalModel = _globalModel;
 
         mDB = mDBHelper.getReadableDatabase();
         cursor = mDB.query(DBHelper.TABLE_NAME_GLOBAL_MADEL, null, null, null, null, null, null);
 
         if (cursor.getCount() < 1) {
-            addGlobalModelToDB(_context, _globalModel);
+            addGlobalModelToDB(_globalModel);
             Log.d("qqq", "create new DB : " + cursor.getCount());
-        } else { Log.d("qqq", "cursor : " + cursor.getCount());
+        } else {
+            Log.d("qqq", "cursor : " + cursor.getCount());
             cursor.moveToFirst();
             if (!cursor.getString(cursor.getColumnIndex(DBHelper.DATA)).equals(_globalModel.getDate())) {
-                Toast.makeText(_context, R.string.ok_load, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, R.string.ok_load, Toast.LENGTH_SHORT).show();
 
                 Log.d("qqq", "add new data to DB");
-                Log.d("qqq", "data in old DB: "+ cursor.getString(cursor.getColumnIndex(DBHelper.DATA)));
+                Log.d("qqq", "data in old DB: " + cursor.getString(cursor.getColumnIndex(DBHelper.DATA)));
                 Log.d("qqq", "data in model: " + _globalModel.getDate());
 
-                mDB = mDBHelper.getWritableDatabase();
-                mDB.delete(DBHelper.TABLE_NAME_GLOBAL_MADEL, null, null);
-                mDB.delete(DBHelper.TABLE_NAME_ORGANIZATION, null, null);
-                mDB.delete(DBHelper.TABLE_NAME_CURRENCY, null, null);
-                mDB.delete(DBHelper.TABLE_NAME_ORG_TYPES_REAL, null, null);
-                mDB.delete(DBHelper.TABLE_NAME_CURRENCIES_REAL, null, null);
-                mDB.delete(DBHelper.TABLE_NAME_REGIONS_REAL, null, null);
-                mDB.delete(DBHelper.TABLE_NAME_CITIES_REAL, null, null);
-
-                addGlobalModelToDB(_context, _globalModel);
-            } else { Log.d("qqq", "DB and Model is same");}
+                addGlobalModelToDB(_globalModel);
+            } else {
+                Log.d("qqq", "DB and Model is same");
+            }
         }
         mDB.close();
-        return _globalModel;
+
+        return mGlobalModel;
     }
 
-    public void addGlobalModelToDB(Context _context, GlobalModel _globalModel) {
-        mContext = _context;
+    public void addGlobalModelToDB(GlobalModel _globalModel) {
+
         mGlobalModel = _globalModel;
 
+//        mDB3 = mDBHelper.getReadableDatabase();
+//        Cursor cursor3 = mDB3.query(DBHelper.TABLE_NAME_CURRENCY, null, null, null, null, null, null);
         mDB = mDBHelper.getWritableDatabase();
+        mDB.delete(DBHelper.TABLE_NAME_GLOBAL_MADEL, null, null);
+        mDB.delete(DBHelper.TABLE_NAME_ORGANIZATION, null, null);
+        mDB.delete(DBHelper.TABLE_NAME_ORG_TYPES_REAL, null, null);
+        mDB.delete(DBHelper.TABLE_NAME_CURRENCIES_REAL, null, null);
+        mDB.delete(DBHelper.TABLE_NAME_REGIONS_REAL, null, null);
+        mDB.delete(DBHelper.TABLE_NAME_CITIES_REAL, null, null);
+        mDB.delete(DBHelper.TABLE_NAME_CURRENCY, null, null);
 
         mContentValues = new ContentValues();
         mContentValues.put(DBHelper.SOURCE_ID, mGlobalModel.getSourceId());
@@ -94,17 +103,25 @@ public class DBWorker {
 
             mDB.insert(DBHelper.TABLE_NAME_ORGANIZATION, null, mContentValues);
 
-            for (Currency currency : organization.getCurrenciesReal()) {
+//            if (cursor3.getCount() < 1) {
+                for (Currency currency : organization.getCurrenciesReal()) {
 
-                mContentValues = new ContentValues();
-                mContentValues.put(DBHelper.ID, organization.getId());
-                mContentValues.put(DBHelper.NAME_CURRENCY, currency.getName());
-                mContentValues.put(DBHelper.ASK, currency.getAsk());
-                mContentValues.put(DBHelper.BID, currency.getBid());
+                    mContentValues = new ContentValues();
+                    mContentValues.put(DBHelper.ID, organization.getId());
+                    mContentValues.put(DBHelper.NAME_CURRENCY, currency.getNameCurrency());
+                    mContentValues.put(DBHelper.ASK, currency.getAsk());
+                    mContentValues.put(DBHelper.BID, currency.getBid());
+                    mContentValues.put(DBHelper.PREVIOUS_ASK, currency.getPreviousAck());
+                    mContentValues.put(DBHelper.PREVIOUS_BID, currency.getPreviousBid());
 
-                mDB.insert(DBHelper.TABLE_NAME_CURRENCY, null, mContentValues);
-            }
+                    mDB.insert(DBHelper.TABLE_NAME_CURRENCY, null, mContentValues);
+                }
+//            }
         }
+//        if(cursor3.getCount()>0) updateDBCurrency(mGlobalModel);
+//        mDB3.close();
+
+        mDB = mDBHelper.getWritableDatabase();
 
         for (PairedObject orgTypesReal : mGlobalModel.getOrgTypes()) {
             mContentValues = new ContentValues();
@@ -141,8 +158,8 @@ public class DBWorker {
 //        showLogs();
     }
 
-    public GlobalModel getGlobalModelFromDB(Context _context) {
-        mContext = _context;
+    public GlobalModel getGlobalModelFromDB() {
+
         mGlobalModel = new GlobalModel();
         mDBHelper = new DBHelper(mContext);
 
@@ -188,10 +205,14 @@ public class DBWorker {
 
                                 if (id.equals(mOrganization.getId())) {
                                     mCurrency = new Currency();
-                                    mCurrency.setName(cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME)));
+                                    mCurrency.setNameCurrency(cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME)));
                                     mCurrency.setAsk(cursor2.getString(cursor2.getColumnIndex(DBHelper.ASK)));
                                     mCurrency.setBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.BID)));
+                                    mCurrency.setPreviousAck(cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_ASK)));
+                                    mCurrency.setPreviousBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_BID)));
                                     mCurrencies.add(mCurrency);
+//                                    Log.d("qqq","ASC: "+ mCurrency.getAsk());
+//                                    Log.d("qqq","OLD ASC: "+ mCurrency.getPreviousAck());
                                 }
 
                             } while (cursor2.moveToNext());
@@ -297,35 +318,56 @@ public class DBWorker {
         return mGlobalModel;
     }
 
-    private void showLogs() {
-        mDB = mDBHelper.getReadableDatabase();
-        Cursor cursor = mDB.query(DBHelper.TABLE_NAME_ORGANIZATION, null, null, null, null, null, null);
-        Cursor cursor2 = mDB.query(DBHelper.TABLE_NAME_CURRENCY, null, null, null, null, null, null);
-        if (cursor.moveToFirst()){
-            Log.d("qqq", "size: " + cursor.getCount());
-            do{
-                Log.d("qqq","name:"+ cursor.getString(cursor.getColumnIndex(DBHelper.TITLE)) );
+    private void updateDBCurrency(GlobalModel newGlobalModel) {
 
-                if(cursor2.moveToFirst()){
-                    do{
-                        if (cursor.getString(cursor.getColumnIndex(DBHelper.ID))
-                                .equals(cursor2.getString(cursor2.getColumnIndex(DBHelper.ID))))
-                            Log.d("qqq","carency: "+ cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME_CURRENCY)) );
+        SQLiteDatabase mDBRead = mDBHelper.getReadableDatabase();
+        SQLiteDatabase mDBWrite = mDBHelper.getWritableDatabase();
+        cursor = mDBRead.query(DBHelper.TABLE_NAME_CURRENCY, null, null, null, null, null, null);
+        for (Organization organization : newGlobalModel.getOrganizations()) {
+            String organizationId = organization.getId();
+            List<Currency> currencies = organization.getCurrenciesReal();
+            if (cursor.moveToFirst()) {
+                do {
+                    if (organizationId.equals(cursor.getString(cursor.getColumnIndex(DBHelper.ID)))) {
+                        for (Currency currency : currencies) {
+                            String nameCurrency = cursor.getString(cursor.getColumnIndex(DBHelper.NAME_CURRENCY));
+                            if (currency.getNameCurrency().equals(nameCurrency)) {
 
-                    }while (cursor2.moveToNext());
-                }
-            } while (cursor.moveToNext());
+                                float oldBid = Float.parseFloat(cursor.getString(cursor.getColumnIndex(DBHelper.BID)));
+                                float oldAsk = Float.parseFloat(cursor.getString(cursor.getColumnIndex(DBHelper.ASK)));
+                                float bid = Float.parseFloat(currency.getBid());
+                                float ask = Float.parseFloat(currency.getAsk());
+                                mContentValues = new ContentValues();
+                                if (bid != oldBid) {
+                                    mContentValues.put(DBHelper.BID, currency.getBid());
+                                    mContentValues.put(DBHelper.PREVIOUS_BID, cursor.getString(cursor.getColumnIndex(DBHelper.BID)));
+                                } else {
+                                    mContentValues.put(DBHelper.BID, currency.getBid());
+                                    mContentValues.put(DBHelper.PREVIOUS_BID, cursor.getString(cursor.getColumnIndex(DBHelper.PREVIOUS_BID)));
+                                }
+                                if (ask != oldAsk) {
+                                    mContentValues.put(DBHelper.ASK, currency.getAsk());
+                                    mContentValues.put(DBHelper.PREVIOUS_ASK, cursor.getString(cursor.getColumnIndex(DBHelper.ASK)));
+                                } else {
+                                    mContentValues.put(DBHelper.ASK, currency.getAsk());
+                                    mContentValues.put(DBHelper.PREVIOUS_ASK, cursor.getString(cursor.getColumnIndex(DBHelper.PREVIOUS_ASK)));
+                                }
+                                mContentValues.put(DBHelper.ID, cursor.getString(cursor.getColumnIndex(DBHelper.ID)));
+                                mContentValues.put(DBHelper.NAME_CURRENCY, cursor.getString(cursor.getColumnIndex(DBHelper.NAME_CURRENCY)));
+
+                                int rowId = cursor.getInt(cursor.getColumnIndex(DBHelper.UID));
+                                mDBWrite.delete(DBHelper.TABLE_NAME_CURRENCY, DBHelper.UID + "=" + rowId, null);
+                                mDBWrite.insert(DBHelper.TABLE_NAME_CURRENCY, null, mContentValues);
+
+                            }
+                        }
+                    }
+                } while (cursor.moveToNext());
+            }
+
         }
-        cursor = mDB.query(DBHelper.TABLE_NAME_REGIONS_REAL, null, null, null, null, null, null);
-    if(cursor.moveToFirst()){
-        do {
-            Log.d("qqq", "name: " + cursor.getString(cursor.getColumnIndex(DBHelper.NAME)));
-            Log.d("qqq", "Id: " + cursor.getString(cursor.getColumnIndex(DBHelper.ID)));
-        } while (cursor.moveToNext());
+        mDBWrite.close();
+        mDBRead.close();
     }
-
-        mDB.close();
-    }
-
 
 }
