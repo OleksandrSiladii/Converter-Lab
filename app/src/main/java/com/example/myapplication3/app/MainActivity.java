@@ -1,11 +1,10 @@
 package com.example.myapplication3.app;
 
+
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,13 +19,12 @@ import com.example.myapplication3.app.service.UpdatingService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener,DetailFragment.OnFragmentInteractionListener {
 
 
     private RecyclerViewFragment recyclerViewFragment;
     private DetailFragment detailFragment = new DetailFragment();
     private MapsFragment mapsFragment = new MapsFragment();
-    private BroadcastReceiver mBroadcastReceiver;
     private DBWorker mDBWorker;
     private Bundle mBundle;
 

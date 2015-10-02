@@ -82,28 +82,6 @@ public class RecyclerViewFragment extends Fragment {
         return rootView;
     }
 
-    private void callToPhone(int position) {
-
-        List<Organization> organizationList = mGlobalModel.getOrganizations();
-        Organization organization = organizationList.get(position);
-        String phone = organization.getPhone();
-        String uri = "tel:" + phone.trim();
-        Intent intent = new Intent(Intent.ACTION_CALL);
-        intent.setData(Uri.parse(uri));
-        startActivity(intent);
-    }
-
-    private void goToLink(int position) {
-
-        List<Organization> organizationList = mGlobalModel.getOrganizations();
-        Organization organization = organizationList.get(position);
-        String link = organization.getLink();
-        Log.d("qqq", link);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(link));
-        startActivity(intent);
-    }
-
     public void setModelInRecyclerView(GlobalModel globalModel) {
         mGlobalModel = globalModel;
 
@@ -136,6 +114,28 @@ public class RecyclerViewFragment extends Fragment {
         });
     }
 
+    private void callToPhone(int position) {
+
+        List<Organization> organizationList = mGlobalModel.getOrganizations();
+        Organization organization = organizationList.get(position);
+        String phone = organization.getPhone();
+        String uri = "tel:" + phone.trim();
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse(uri));
+        startActivity(intent);
+    }
+
+    private void goToLink(int position) {
+
+        List<Organization> organizationList = mGlobalModel.getOrganizations();
+        Organization organization = organizationList.get(position);
+        String link = organization.getLink();
+        Log.d("qqq", link);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(link));
+        startActivity(intent);
+    }
+
     public interface OnFragmentInteractionListener {
 
         public void goDetailFragment(GlobalModel globalModel, int position);
@@ -151,6 +151,7 @@ public class RecyclerViewFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                                               public boolean onQueryTextChange(String text) {
                                                   getRezOfSearch(text);
+                                                  Log.d("qqq","SearchView action");
                                                   return false;
                                               }
 
