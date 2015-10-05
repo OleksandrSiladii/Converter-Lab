@@ -25,6 +25,21 @@ public class GlobalModel implements Serializable {
     public static final String TAG_GLOBAL_MODEL = "TAG_GLOBAL_MODEL";
     public static final String TAG_POSITION = "TAG_POSITION";
 
+    public GlobalModel() {
+    }
+
+    public GlobalModel(String sourceId, String date, List<Organization> organizations,
+                       List<PairedObject> orgTypesReal, List<PairedObject> currenciesReal,
+                       List<PairedObject> regionsReal, List<PairedObject> citiesReal) {
+        this.sourceId = sourceId;
+        this.date = date;
+        this.organizations = organizations;
+        this.orgTypesReal = orgTypesReal;
+        this.currenciesReal = currenciesReal;
+        this.regionsReal = regionsReal;
+        this.citiesReal = citiesReal;
+    }
+
 
     public void setOrganizations(List<Organization> organizations) {
         this.organizations = organizations;

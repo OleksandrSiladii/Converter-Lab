@@ -51,6 +51,7 @@ public class RecyclerViewFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private GlobalModel mGlobalModel;
+    private List<Organization> mOrganizations;
     private OnFragmentInteractionListener mListener;
     private ProgressBar mProgressBarLoad;
     private DBWorker mDBWorker;
@@ -82,10 +83,9 @@ public class RecyclerViewFragment extends Fragment {
         return rootView;
     }
 
-    public void setModelInRecyclerView(GlobalModel globalModel) {
-        mGlobalModel = globalModel;
+    public void setModelInRecyclerView(final GlobalModel globalModel) {
 
-        mAdapter = new RecyclerAdapter(mGlobalModel);
+        mAdapter = new RecyclerAdapter(globalModel);
         mProgressBarLoad.setVisibility(View.INVISIBLE);
 
         mRecyclerView.setAdapter(mAdapter);
@@ -94,20 +94,19 @@ public class RecyclerViewFragment extends Fragment {
             @Override
             public void onItemClick(int position, View view) {
 
-
                 switch (view.getId()) {
                     case R.id.iv_link_RI:
                         goToLink(position);
                         break;
                     case R.id.iv_map_RI:
-                        mListener.goMapsFragment(mGlobalModel, position);
+                        mListener.goMapsFragment(globalModel, position);
                         break;
                     case R.id.iv_phone_RI:
                         callToPhone(position);
                         break;
                     case R.id.iv_next_RI:
                         Log.d("qqq", "next");
-                        mListener.goDetailFragment(mGlobalModel, position);
+                        mListener.goDetailFragment(globalModel, position);
                         break;
                 }
             }
@@ -151,7 +150,7 @@ public class RecyclerViewFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                                               public boolean onQueryTextChange(String text) {
                                                   getRezOfSearch(text);
-                                                  Log.d("qqq","SearchView action");
+//                                                  Log.d("qqq","SearchView action");
                                                   return false;
                                               }
 
@@ -163,7 +162,9 @@ public class RecyclerViewFragment extends Fragment {
     }
 
     private void getRezOfSearch(String searchText) {
-        GlobalModel rezOfSearch = mGlobalModel;
+        GlobalModel rezOfSearch = new GlobalModel(mGlobalModel.getSourceId(), mGlobalModel.getDate(), mGlobalModel.getOrganizations(),
+                mGlobalModel.getOrgTypes(), mGlobalModel.getCurrenciesReal(), mGlobalModel.getRegionsReal(), mGlobalModel.getCitiesReal());
+
         List<Organization> organizations = new ArrayList<Organization>();
         for (Organization organization : mGlobalModel.getOrganizations()) {
             String city = getRealName(mGlobalModel.getCitiesReal(), organization.getCityId());
@@ -174,6 +175,7 @@ public class RecyclerViewFragment extends Fragment {
                 organizations.add(organization);
             }
         }
+        Log.d("qqq", "searchText : " + searchText + "  size : " + organizations.size());
         rezOfSearch.setOrganizations(organizations);
         setModelInRecyclerView(rezOfSearch);
     }

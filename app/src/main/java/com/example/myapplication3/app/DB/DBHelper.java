@@ -14,7 +14,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "global_model";
     private static final int DATABASE_VERSION = 1;
     public static final String TABLE_NAME_ORGANIZATION = "organization";
-    public static final String TABLE_NAME_CURRENCY = "currency";
+    public static final String TABLE_NAME_CURRENCY1 = "currency1";
+    public static final String TABLE_NAME_CURRENCY2 = "currency2";
     public static final String TABLE_NAME_ORG_TYPES_REAL = "orgTypesReal";
     public static final String TABLE_NAME_CURRENCIES_REAL = "currenciesReal";
     public static final String TABLE_NAME_REGIONS_REAL = "regionsReal";
@@ -58,8 +59,17 @@ public class DBHelper extends SQLiteOpenHelper {
             + ADDRESS + " TEXT,"
             + LINK + " TEXT);";
 
-    private static final String SQL_CREATE_ENTRIES_CURRENCY = "CREATE TABLE "
-            + TABLE_NAME_CURRENCY + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+    private static final String SQL_CREATE_ENTRIES_CURRENCY1 = "CREATE TABLE "
+            + TABLE_NAME_CURRENCY1 + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + ID + " TEXT,"
+            + NAME_CURRENCY + " TEXT,"
+            + ASK + " TEXT,"
+            + PREVIOUS_ASK + " TEXT,"
+            + PREVIOUS_BID + " TEXT,"
+            + BID + " TEXT);";
+
+    private static final String SQL_CREATE_ENTRIES_CURRENCY2 = "CREATE TABLE "
+            + TABLE_NAME_CURRENCY2 + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + ID + " TEXT,"
             + NAME_CURRENCY + " TEXT,"
             + ASK + " TEXT,"
@@ -95,7 +105,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES_GLOBAL_MADEL);
         db.execSQL(SQL_CREATE_ENTRIES_ORGANIZATION);
-        db.execSQL(SQL_CREATE_ENTRIES_CURRENCY);
+        db.execSQL(SQL_CREATE_ENTRIES_CURRENCY1);
+        db.execSQL(SQL_CREATE_ENTRIES_CURRENCY2);
         db.execSQL(SQL_CREATE_ENTRIES_ORG_TYPES_REAL);
         db.execSQL(SQL_CREATE_ENTRIES_CURRENCIES_REAL);
         db.execSQL(SQL_CREATE_ENTRIES_REGION_REAL);

@@ -15,4 +15,6 @@
     <string name="map">карта</string>
     <string name="link">сайт</string>
     <string name="call">позвонить</string>
+    <string name="DB_is_update">База данных обновлена</string>
+    <string name="DB_update_OK">Обновление прошло успешно</string>
 </resources>

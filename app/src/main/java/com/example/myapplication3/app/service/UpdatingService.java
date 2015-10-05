@@ -1,8 +1,11 @@
 package com.example.myapplication3.app.service;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +13,12 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.myapplication3.app.DB.DBWorker;
+import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.rest.RetrofitAdapter;
@@ -33,6 +38,7 @@ public class UpdatingService extends Service {
     public final static String ALARM_ACTION = "com.example.myapplication3.app.service.ALARM_ACTION";
     DBWorker mDBWorker;
 
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -44,6 +50,7 @@ public class UpdatingService extends Service {
         super.onCreate();
         regBroadcastReceiver();
         startAlarmManager();
+
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -66,7 +73,7 @@ public class UpdatingService extends Service {
                 addModelInDB.execute(globalModel);
 
                 sendBroadcast(globalModel);
-
+//                sendNotification();
                 Log.d("qqq", "add new model in DB asyncTask");
             }
 
@@ -106,6 +113,21 @@ public class UpdatingService extends Service {
         };
         IntentFilter intentFilter = new IntentFilter(ALARM_ACTION);
         registerReceiver(alarmReceiver, intentFilter);
+    }
+    void sendNotification() {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        mBuilder.setContentTitle(getResources().getString(R.string.DB_is_update));
+        mBuilder.setContentText(getResources().getString(R.string.DB_update_OK));
+        mBuilder.setAutoCancel (true);
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(111, mBuilder.build());
     }
 
     class AddModelInDB extends AsyncTask<GlobalModel, Void, Void> {

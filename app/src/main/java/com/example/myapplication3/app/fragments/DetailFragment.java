@@ -166,25 +166,25 @@ List<Organization> organizationList = mGlobalModel.getOrganizations();
             tvSell.setText(item.getBid());
             tvCurrency.setText(getRealName(mGlobalModel.getCurrenciesReal(), item.getNameCurrency()));
 
-//            float ask = Float.parseFloat(item.getAsk());
-//            float olgAsk = Float.parseFloat(item.getPreviousAck());
-//            float bid = Float.parseFloat(item.getBid());
-//            float olgBid = Float.parseFloat(item.getPreviousBid());
-//            if (bid < olgBid) {
-//                tvSell.setTextColor(getResources().getColor(R.color.color_red_down));
-//                ivSell.setImageResource(R.drawable.ic_red_arrow_down);
-//            } else {
-//                tvSell.setTextColor(getResources().getColor(R.color.color_green_up));
-//                ivSell.setImageResource(R.drawable.ic_green_arrow_up);
-//            }
-//            if (ask < olgAsk) {
-//                tvBuy.setTextColor(getResources().getColor(R.color.color_red_down));
-//                ivBuy.setImageResource(R.drawable.ic_red_arrow_down);
-//            } else {
-//                tvBuy.setTextColor(getResources().getColor(R.color.color_green_up));
-//                ivBuy.setImageResource(R.drawable.ic_green_arrow_up);
-//            }
-//            Log.d("qqq", "ask: " + ask+" old ask: "+ olgAsk);
+            float ask = Float.parseFloat(item.getAsk());
+            float olgAsk = Float.parseFloat(item.getPreviousAck());
+            float bid = Float.parseFloat(item.getBid());
+            float olgBid = Float.parseFloat(item.getPreviousBid());
+            if (bid < olgBid) {
+                tvSell.setTextColor(getResources().getColor(R.color.color_red_down));
+                ivSell.setImageResource(R.drawable.ic_red_arrow_down);
+            } else {
+                tvSell.setTextColor(getResources().getColor(R.color.color_green_up));
+                ivSell.setImageResource(R.drawable.ic_green_arrow_up);
+            }
+            if (ask < olgAsk) {
+                tvBuy.setTextColor(getResources().getColor(R.color.color_red_down));
+                ivBuy.setImageResource(R.drawable.ic_red_arrow_down);
+            } else {
+                tvBuy.setTextColor(getResources().getColor(R.color.color_green_up));
+                ivBuy.setImageResource(R.drawable.ic_green_arrow_up);
+            }
+            Log.d("qqq", "ask: " + ask+" old ask: "+ olgAsk);
             mLlContainerForCurrency.addView(mLlCurrencyItem);
         }
     }
