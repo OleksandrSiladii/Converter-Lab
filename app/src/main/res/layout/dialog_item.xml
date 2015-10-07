@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/card_view_margin"
+    android:orientation="vertical">
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_name_of_bank_DI"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_information_DI"/>
-    <LinearLayout
+        android:id="@+id/tv_name_of_bank_DI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/card_view_margin"
+        android:text="BANK"
+        android:textSize="@dimen/text_size_name_of_bank"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_information_DI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/card_view_margin"
+        android:layout_marginLeft="@dimen/card_view_margin"
+        android:text="REGION \n CITY" />
+
+    <LinearLayout
         android:id="@+id/ll_container_for_currency_DI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
     </LinearLayout>

@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,7 +46,7 @@ import retrofit.client.Response;
  * Created by sasha on 22.09.2015.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class RecyclerViewFragment extends Fragment {
+public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -56,6 +57,7 @@ public class RecyclerViewFragment extends Fragment {
     private ProgressBar mProgressBarLoad;
     private DBWorker mDBWorker;
     BroadcastReceiver mBroadcastReceiver;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +67,13 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
         mProgressBarLoad = (ProgressBar) rootView.findViewById(R.id.pb_load_RF);
         mDBWorker = new DBWorker(getActivity());
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorScheme(R.color.blue,
+                R.color.color_of_bank_name,
+                R.color.color_green_up,
+                R.color.black_semi_transparent);
 
         mRecyclerView.setHasFixedSize(true);
 
@@ -133,6 +142,20 @@ public class RecyclerViewFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(link));
         startActivity(intent);
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        Intent intent = new Intent(getActivity(), UpdatingService.class);
+        getActivity().startService(intent);
+//        mSwipeRefreshLayout.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mSwipeRefreshLayout.setRefreshing(false);
+//                Toast.makeText(getActivity(), R.string.error_load, Toast.LENGTH_SHORT).show();
+//            }
+//        }, 10000);
     }
 
     public interface OnFragmentInteractionListener {
@@ -218,6 +241,8 @@ public class RecyclerViewFragment extends Fragment {
                 Bundle bundle = intent.getBundleExtra(GlobalModel.TAG_GLOBAL_MODEL);
                 Gson gson = new GsonBuilder().create();
                 GlobalModel globalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
+                mSwipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getActivity(), getString(R.string.DB_is_update),Toast.LENGTH_SHORT).show();
                 setModelInRecyclerView(globalModel);
             }
         };

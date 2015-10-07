@@ -3,6 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="card_view_margin">10dp</dimen>
+    <dimen name="margin_liner_layout">15dp</dimen>
+    <dimen name="text_size_name_of_bank">15sp</dimen>
+
     <dimen name="font_size_18sp">18sp</dimen>
     <dimen name="font_size_16sp">16sp</dimen>
     <dimen name="font_size_20sp">20sp</dimen>

@@ -143,7 +143,7 @@ public class DBWorker {
         if (cursor2.getCount() < 1) {
             addCurrencyInTable2();
         } else {
-            updateCurrencyInTable2();
+//            updateCurrencyInTable2();
         }
         updateCurrencyInMainTable();
     }

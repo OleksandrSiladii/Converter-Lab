@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
 
         startUpdatingService();
-//        regBroadcastReceiver();
+
     }
 
     private void startUpdatingService() {

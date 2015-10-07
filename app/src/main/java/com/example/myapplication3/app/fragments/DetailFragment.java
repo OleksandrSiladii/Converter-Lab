@@ -31,17 +31,17 @@ import java.util.List;
 /**
  * Created by sasha on 22.09.2015.
  */
-public class DetailFragment extends Fragment implements View.OnClickListener{
+public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private GlobalModel mGlobalModel;
     private Organization mOrganization;
 
     private TextView mTvBankName;
     private TextView mTvInformation;
-    private  LinearLayout mLlContainerForCurrency;
+    private LinearLayout mLlContainerForCurrency;
     private OnFragmentInteractionListener mListener;
     private int position;
-//    private  FloatingActionButton mFabLink, mFabMap, mFabCall;
+    private DialogFragment mDialogFragmentInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener{
         Bundle bundle = getArguments();
         Gson gson = new GsonBuilder().create();
         mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
-         position = bundle.getInt(GlobalModel.TAG_POSITION);
+        position = bundle.getInt(GlobalModel.TAG_POSITION);
 
         mOrganization = mGlobalModel.getOrganizations().get(position);
 
@@ -68,21 +68,21 @@ public class DetailFragment extends Fragment implements View.OnClickListener{
         setHasOptionsMenu(true);
 
         return rootView;
-        }
+    }
 
     @Override
     public void onClick(View view) {
-switch (view.getId()){
-    case R.id.btn_call_FAB:
-        callToPhone();
-        break;
-    case R.id.btn_map_FAB:
-        mListener.goMapsFragment(mGlobalModel, position);
-        break;
-    case R.id.btn_link_FAB:
-        goToLink();
-        break;
-}
+        switch (view.getId()) {
+            case R.id.btn_call_FAB:
+                callToPhone();
+                break;
+            case R.id.btn_map_FAB:
+                mListener.goMapsFragment(mGlobalModel, position);
+                break;
+            case R.id.btn_link_FAB:
+                goToLink();
+                break;
+        }
     }
 
     private String getInformation() {
@@ -114,8 +114,9 @@ switch (view.getId()){
         }
         return id;
     }
+
     private void goToLink() {
-List<Organization> organizationList = mGlobalModel.getOrganizations();
+        List<Organization> organizationList = mGlobalModel.getOrganizations();
         Organization organization = organizationList.get(position);
         String link = organization.getLink();
         Log.d("qqq", link);
@@ -123,8 +124,9 @@ List<Organization> organizationList = mGlobalModel.getOrganizations();
         intent.setData(Uri.parse(link));
         startActivity(intent);
     }
+
     private void callToPhone() {
-List<Organization> organizationList = mGlobalModel.getOrganizations();
+        List<Organization> organizationList = mGlobalModel.getOrganizations();
         Organization organization = organizationList.get(position);
         String phone = organization.getPhone();
         String uri = "tel:" + phone.trim();
@@ -132,6 +134,7 @@ List<Organization> organizationList = mGlobalModel.getOrganizations();
         intent.setData(Uri.parse(uri));
         startActivity(intent);
     }
+
     public interface OnFragmentInteractionListener {
 
         public void goMapsFragment(GlobalModel globalModel, int position);
@@ -146,7 +149,7 @@ List<Organization> organizationList = mGlobalModel.getOrganizations();
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_share_menu_MDF) {
-    showDialog();
+            showDialog();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -184,7 +187,7 @@ List<Organization> organizationList = mGlobalModel.getOrganizations();
                 tvBuy.setTextColor(getResources().getColor(R.color.color_green_up));
                 ivBuy.setImageResource(R.drawable.ic_green_arrow_up);
             }
-            Log.d("qqq", "ask: " + ask+" old ask: "+ olgAsk);
+            Log.d("qqq", "ask: " + ask + " old ask: " + olgAsk);
             mLlContainerForCurrency.addView(mLlCurrencyItem);
         }
     }
@@ -192,14 +195,23 @@ List<Organization> organizationList = mGlobalModel.getOrganizations();
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-                try {
+        try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString());
         }
     }
 
-    private void showDialog(){
+    private void showDialog() {
+        mDialogFragmentInfo = new DialogFragment();
+        Bundle mBundle = new Bundle();
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(mGlobalModel);
+        mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
+        mBundle.putInt(GlobalModel.TAG_POSITION, position);
+        mDialogFragmentInfo.setArguments(mBundle);
+
+        mDialogFragmentInfo.show(getFragmentManager(), "dlg2");
 
     }
 }

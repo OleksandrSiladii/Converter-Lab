@@ -116,6 +116,7 @@
         fab:fab_addButtonColorNormal="@color/pink"
         fab:fab_addButtonColorPressed="@color/pink_pressed"
         fab:fab_icon="@drawable/ic_menu"
+
         fab:fab_labelStyle="@style/menu_labels_style">
 <!--
         fab:fab_addButtonPlusIconColor="@color/half_black"
