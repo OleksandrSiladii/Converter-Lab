@@ -1,8 +1,8 @@
 package com.example.myapplication3.app.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,12 +17,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.models.PairedObject;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -35,7 +35,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private GlobalModel mGlobalModel;
     private Organization mOrganization;
-
+    private ActionBar actionBar;
     private TextView mTvBankName;
     private TextView mTvInformation;
     private LinearLayout mLlContainerForCurrency;
@@ -69,6 +69,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
         return rootView;
     }
+
 
     @Override
     public void onClick(View view) {
@@ -188,6 +189,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 ivBuy.setImageResource(R.drawable.ic_green_arrow_up);
             }
             Log.d("qqq", "ask: " + ask + " old ask: " + olgAsk);
+            Log.d("qqq", "bid: " + bid + " old bid: " + olgBid);
             mLlContainerForCurrency.addView(mLlCurrencyItem);
         }
     }
@@ -195,6 +197,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {

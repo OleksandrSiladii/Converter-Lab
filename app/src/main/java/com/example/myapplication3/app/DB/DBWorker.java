@@ -39,7 +39,6 @@ public class DBWorker {
         mGlobalModel = _globalModel;
         mDB = mDBHelper.getWritableDatabase();
 
-//        mDB = mDBHelper.getReadableDatabase();
         cursor = mDB.query(DBHelper.TABLE_NAME_GLOBAL_MADEL, null, null, null, null, null, null);
 
         if (cursor.getCount() < 1) {
@@ -141,11 +140,14 @@ public class DBWorker {
         cursor2 = mDB.query(DBHelper.TABLE_NAME_CURRENCY2, null, null, null, null, null, null);
         cursor = mDB.query(DBHelper.TABLE_NAME_CURRENCY1, null, null, null, null, null, null);
         if (cursor2.getCount() < 1) {
+            Log.d("aaa", "addCurrencyInTable2");
             addCurrencyInTable2();
         } else {
-//            updateCurrencyInTable2();
+            Log.d("aaa", "updateCurrencyInTable2");
+            updateCurrencyInTable2();
         }
         updateCurrencyInMainTable();
+        Log.d("aaa", "updateCurrencyInMainTable");
     }
 
     private void updateCurrencyInMainTable() {
@@ -163,7 +165,7 @@ public class DBWorker {
                             mContentValues.put(DBHelper.ID, cursor2.getString(cursor2.getColumnIndex(DBHelper.ID)));
                             mContentValues.put(DBHelper.NAME_CURRENCY, cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME_CURRENCY)));
                             int rowId = cursor.getInt(cursor.getColumnIndex(DBHelper.UID));
-                            mDB.delete(DBHelper.TABLE_NAME_CURRENCY1, DBHelper.UID + "=" + rowId, null);
+                            mDB.delete(DBHelper.TABLE_NAME_CURRENCY1, DBHelper.UID + " = " + rowId, null);
                             mDB.insert(DBHelper.TABLE_NAME_CURRENCY1, null, mContentValues);
                         }
                     }
@@ -204,12 +206,10 @@ public class DBWorker {
                             mContentValues.put(DBHelper.ID, cursor.getString(cursor.getColumnIndex(DBHelper.ID)));
                             mContentValues.put(DBHelper.NAME_CURRENCY, cursor.getString(cursor.getColumnIndex(DBHelper.NAME_CURRENCY)));
                             int rowId = cursor.getInt(cursor.getColumnIndex(DBHelper.UID));
-                            mDB.delete(DBHelper.TABLE_NAME_CURRENCY2, DBHelper.UID + "=" + rowId, null);
+                            mDB.delete(DBHelper.TABLE_NAME_CURRENCY2, DBHelper.UID + " = " + rowId, null);
                             mDB.insert(DBHelper.TABLE_NAME_CURRENCY2, null, mContentValues);
                         }
-
-
-                    } while (cursor.moveToNext());
+                    } while (cursor2.moveToNext());
                 }
                 if (!currencyIsInBase) {
                     mContentValues = new ContentValues();
@@ -335,8 +335,7 @@ public class DBWorker {
                                     mCurrency.setPreviousAck(cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_ASK)));
                                     mCurrency.setPreviousBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_BID)));
                                     mCurrencies.add(mCurrency);
-//                                    Log.d("qqq","ASC: "+ mCurrency.getAsk());
-//                                    Log.d("qqq","OLD ASC: "+ mCurrency.getPreviousAck());
+
                                 }
 
                             } while (cursor2.moveToNext());

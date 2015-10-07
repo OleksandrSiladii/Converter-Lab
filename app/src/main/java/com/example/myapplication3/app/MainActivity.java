@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
             FragmentTransaction mFragmentTransaction = getFragmentManager().beginTransaction();
             mFragmentTransaction.setCustomAnimations(R.animator.add_frag_animator, R.animator.rem_frag_animator);
             mFragmentTransaction.replace(R.id.frgCont, fragment, "my_fragment");
-            mFragmentTransaction.addToBackStack(null);
+            if (fragment == detailFragment){
+            mFragmentTransaction.addToBackStack(null);}
             mFragmentTransaction.commit();
         }
     }

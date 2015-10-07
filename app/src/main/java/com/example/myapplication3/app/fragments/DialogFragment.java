@@ -112,9 +112,9 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
         DisplayMetrics metricsB = new DisplayMetrics();
         display.getMetrics(metricsB);
 
-        view.measure((int) (metricsB.widthPixels * 0.7), LinearLayout.LayoutParams.WRAP_CONTENT);
+        view.measure((int) (metricsB.widthPixels * 0.6), LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        mBitmap = Bitmap.createBitmap(((int) (metricsB.widthPixels * 0.7)), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap(((int) (metricsB.widthPixels * 0.5)), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mBitmap);
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         view.draw(canvas);
@@ -163,6 +163,7 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
                         file.setReadable(true, false);
 //            Uri uri = Uri.fromFile(new File(getFilesDir(), "foo.jpg"));
                         Uri uri = Uri.fromFile(file);
+                        dismiss();
                         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                         getActivity().startActivity(Intent.createChooser(shareIntent, "Share image using"));
                     }

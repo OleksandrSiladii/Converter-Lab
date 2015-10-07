@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,27 +47,28 @@ import retrofit.client.Response;
  * Created by sasha on 22.09.2015.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private GlobalModel mGlobalModel;
-    private List<Organization> mOrganizations;
     private OnFragmentInteractionListener mListener;
     private ProgressBar mProgressBarLoad;
-    private DBWorker mDBWorker;
-    BroadcastReceiver mBroadcastReceiver;
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    private SharedPreferences mSharedPreferences;
+    private BroadcastReceiver mBroadcastReceiver;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private final static String SAVED_TEXT = "saved_text";
+    private String json;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+//Log.d("qqq","onCreateView");
         View rootView = inflater.inflate(R.layout.recycler_view_fragment, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
         mProgressBarLoad = (ProgressBar) rootView.findViewById(R.id.pb_load_RF);
-        mDBWorker = new DBWorker(getActivity());
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -80,10 +82,12 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-
-        Bundle bundle = getArguments();
-        Gson gson = new GsonBuilder().create();
-        mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
+        if (mGlobalModel == null) {
+            Bundle bundle = getArguments();
+            json = bundle.getString(GlobalModel.TAG_GLOBAL_MODEL);
+            Gson gson = new GsonBuilder().create();
+            mGlobalModel = gson.fromJson(json, GlobalModel.class);
+        }
 
         setModelInRecyclerView(mGlobalModel);
 
@@ -95,6 +99,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     public void setModelInRecyclerView(final GlobalModel globalModel) {
 
         mAdapter = new RecyclerAdapter(globalModel);
+        mAdapter.notifyDataSetChanged();
         mProgressBarLoad.setVisibility(View.INVISIBLE);
 
         mRecyclerView.setAdapter(mAdapter);
@@ -240,10 +245,10 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
 
                 Bundle bundle = intent.getBundleExtra(GlobalModel.TAG_GLOBAL_MODEL);
                 Gson gson = new GsonBuilder().create();
-                GlobalModel globalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
+                mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
                 mSwipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getActivity(), getString(R.string.DB_is_update),Toast.LENGTH_SHORT).show();
-                setModelInRecyclerView(globalModel);
+                Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
+                setModelInRecyclerView(mGlobalModel);
             }
         };
         IntentFilter intentFilter = new IntentFilter(UpdatingService.BROADCAST_ACTION);

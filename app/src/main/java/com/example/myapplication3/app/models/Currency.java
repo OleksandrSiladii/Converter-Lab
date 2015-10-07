@@ -10,7 +10,7 @@ public class Currency {
     private String nameCurrency;
     private String id;
     private String previousAck = "0";
-    private String previousBid = "0";
+    private String previousBid = "100";
 
 
     public String getPreviousAck() {
