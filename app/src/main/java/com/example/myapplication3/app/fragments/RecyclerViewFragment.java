@@ -14,34 +14,26 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.adapters.RecyclerAdapter;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.models.PairedObject;
-import com.example.myapplication3.app.rest.RetrofitAdapter;
 import com.example.myapplication3.app.service.UpdatingService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by sasha on 22.09.2015.
@@ -64,7 +56,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//Log.d("qqq","onCreateView");
+
         View rootView = inflater.inflate(R.layout.recycler_view_fragment, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
@@ -119,7 +111,6 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                         callToPhone(position);
                         break;
                     case R.id.iv_next_RI:
-                        Log.d("qqq", "next");
                         mListener.goDetailFragment(globalModel, position);
                         break;
                 }
@@ -143,7 +134,6 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         List<Organization> organizationList = mGlobalModel.getOrganizations();
         Organization organization = organizationList.get(position);
         String link = organization.getLink();
-        Log.d("qqq", link);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(link));
         startActivity(intent);
@@ -154,13 +144,15 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         mSwipeRefreshLayout.setRefreshing(true);
         Intent intent = new Intent(getActivity(), UpdatingService.class);
         getActivity().startService(intent);
-//        mSwipeRefreshLayout.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mSwipeRefreshLayout.setRefreshing(false);
-//                Toast.makeText(getActivity(), R.string.error_load, Toast.LENGTH_SHORT).show();
-//            }
-//        }, 10000);
+        mSwipeRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mSwipeRefreshLayout.isRefreshing()) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(getActivity(), R.string.error_load, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, 40000);
     }
 
     public interface OnFragmentInteractionListener {
@@ -178,7 +170,6 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                                               public boolean onQueryTextChange(String text) {
                                                   getRezOfSearch(text);
-//                                                  Log.d("qqq","SearchView action");
                                                   return false;
                                               }
 
@@ -203,7 +194,6 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                 organizations.add(organization);
             }
         }
-        Log.d("qqq", "searchText : " + searchText + "  size : " + organizations.size());
         rezOfSearch.setOrganizations(organizations);
         setModelInRecyclerView(rezOfSearch);
     }
@@ -248,6 +238,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                 mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
                 mSwipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
+
                 setModelInRecyclerView(mGlobalModel);
             }
         };

@@ -1,7 +1,6 @@
 package com.example.myapplication3.app.service;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,7 +14,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.MainActivity;
@@ -36,8 +34,9 @@ public class UpdatingService extends Service {
 
     public final static String BROADCAST_ACTION = "com.example.myapplication3.app.service.BROADCAST_ACTION";
     public final static String ALARM_ACTION = "com.example.myapplication3.app.service.ALARM_ACTION";
+    GlobalModel mGlobalModel;
     DBWorker mDBWorker;
-
+    NotificationManager mNotificationManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -57,7 +56,9 @@ public class UpdatingService extends Service {
         Log.d("qqq", "MyService onStartCommand");
 
         mDBWorker = new DBWorker(getApplicationContext());
+
         getGlobalModel();
+        showNotification();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -69,21 +70,68 @@ public class UpdatingService extends Service {
             public void success(GlobalModel globalModel, Response response) {
                 globalModel.deresialize();
 
-                AddModelInDB addModelInDB = new AddModelInDB();
-                addModelInDB.execute(globalModel);
+                if ((mGlobalModel == null) || !(mGlobalModel.getDate().equals(globalModel.getDate()))) {
+                    AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
+                    addModelInDB.execute(globalModel);
+                    Log.d("qqq", "add new model in DB asyncTask");
+                    if (!(mGlobalModel == null)) {
+                        globalModel.setOrganizations(mDBWorker.getOrganizationList());
+                    }
+                    sendBroadcast(globalModel);
+                } else {
+                    Log.d("qqq", "new model and DB is same");
+                    sendBroadcast(mGlobalModel);
+                }
 
-                sendBroadcast(globalModel);
-//                sendNotification();
-                Log.d("qqq", "add new model in DB asyncTask");
             }
 
+
             @Override
+
             public void failure(RetrofitError error) {
+                sendBroadcast(mGlobalModel);
             }
         });
     }
 
+    void showNotification() {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        mBuilder.setContentTitle(getResources().getString(R.string.DB_is_update));
+        mBuilder.setContentText(getResources().getString(R.string.DB_update_OK));
+        mBuilder.setAutoCancel(true);
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(111, mBuilder.build());
+    }
+
+    class AddModelInDBAsyncTask extends AsyncTask<GlobalModel, Void, GlobalModel> {
+
+        @Override
+        protected GlobalModel doInBackground(GlobalModel... globalModels) {
+            DBWorker mDBWorker = new DBWorker(getApplicationContext());
+            mDBWorker.addNewGlobalModelToDB(globalModels[0]);
+            GlobalModel globalModel = globalModels[0];
+            globalModel.setOrganizations(mDBWorker.getOrganizationList());
+            return globalModel;
+        }
+
+        @Override
+        protected void onPostExecute(GlobalModel globalModel) {
+            super.onPostExecute(globalModel);
+
+            mGlobalModel = globalModel;
+        }
+
+    }
+
     private void sendBroadcast(GlobalModel globalModel) {
+        mNotificationManager.cancelAll();
 
         Intent intent = new Intent(UpdatingService.BROADCAST_ACTION);
         Log.d("qqq", "send Broadcast from service with model");
@@ -109,34 +157,10 @@ public class UpdatingService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 getGlobalModel();
+                Log.d("qqq", "alarm");
             }
         };
         IntentFilter intentFilter = new IntentFilter(ALARM_ACTION);
         registerReceiver(alarmReceiver, intentFilter);
-    }
-    void sendNotification() {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        mBuilder.setContentTitle(getResources().getString(R.string.DB_is_update));
-        mBuilder.setContentText(getResources().getString(R.string.DB_update_OK));
-        mBuilder.setAutoCancel (true);
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(111, mBuilder.build());
-    }
-
-    class AddModelInDB extends AsyncTask<GlobalModel, Void, Void> {
-
-        @Override
-        protected Void doInBackground(GlobalModel... globalModels) {
-            DBWorker mDBWorker = new DBWorker(getApplicationContext());
-            mDBWorker.addNewGlobalModelToDB(globalModels[0]);
-            return null;
-        }
     }
 }

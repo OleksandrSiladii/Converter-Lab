@@ -3,29 +3,38 @@ package com.example.myapplication3.app;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.fragments.DetailFragment;
-import com.example.myapplication3.app.fragments.MapsFragment;
 import com.example.myapplication3.app.fragments.RecyclerViewFragment;
 import com.example.myapplication3.app.models.GlobalModel;
+import com.example.myapplication3.app.models.Organization;
+import com.example.myapplication3.app.models.PairedObject;
 import com.example.myapplication3.app.service.UpdatingService;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener,DetailFragment.OnFragmentInteractionListener {
 
 
-    private RecyclerViewFragment recyclerViewFragment;
     private DetailFragment detailFragment = new DetailFragment();
-    private MapsFragment mapsFragment = new MapsFragment();
-    private DBWorker mDBWorker;
+
     private Bundle mBundle;
 
 
@@ -34,15 +43,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDBWorker = new DBWorker(this);
-
-//        ButterKnife.bind(this);
+        DBWorker mDBWorker = new DBWorker(this);
 
         goRecyclerViewFragment(mDBWorker.getGlobalModelFromDB());
 
-
         startUpdatingService();
-
     }
 
     private void startUpdatingService() {
@@ -56,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(globalModelFromDB);
         mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
-        recyclerViewFragment = new RecyclerViewFragment();
+        RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
         recyclerViewFragment.setArguments(mBundle);
         addFragment(recyclerViewFragment);
     }
@@ -73,15 +78,30 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
         addFragment(detailFragment);
     }
-
+    GoogleMap googleMap;
+    MarkerOptions markerOptions;
+    LatLng latLng;
     @Override
     public void goMapsFragment(GlobalModel globalModel, int position) {
         mBundle = new Bundle();
-        mBundle.putSerializable(GlobalModel.TAG_GLOBAL_MODEL, globalModel);
-        mBundle.putInt(GlobalModel.TAG_POSITION, position);
-        mapsFragment.setArguments(mBundle);
+        Organization organization = globalModel.getOrganizations().get(position);
+        mBundle.putString(MapsViewActivity.CITY, getRealName(globalModel.getCitiesReal(), organization.getCityId()));
+        mBundle.putString(MapsViewActivity.REGION, getRealName(globalModel.getRegionsReal(), organization.getRegionId()));
+        mBundle.putString(MapsViewActivity.ADDRESS,organization.getAddress());
+        Intent intent = new Intent(MainActivity.this, MapsViewActivity.class);
+        intent.putExtras(mBundle);
+        startActivity(intent);
+    }
 
-        addFragment(mapsFragment);
+    private String getRealName(List<PairedObject> pairedObjectList, String id) {
+        for (PairedObject item : pairedObjectList) {
+            if (item.getId().equals(id)) {
+                String rez = item.getName();
+                rez = rez.replaceAll("\"", "");
+                return rez;
+            }
+        }
+        return id;
     }
 
     private void addFragment(Fragment fragment) {
@@ -119,4 +139,57 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     protected void onDestroy() {
         super.onDestroy();
     }
+
+    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
+
+        @Override
+        protected List<Address> doInBackground(String... locationName) {
+            // Creating an instance of Geocoder class
+            Geocoder geocoder = new Geocoder(MainActivity.this);
+            List<Address> addresses = null;
+
+            try {
+                // Getting a maximum of 3 Address that matches the input text
+                addresses = geocoder.getFromLocationName(locationName[0], 3);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return addresses;
+        }
+
+        @Override
+        protected void onPostExecute(List<Address> addresses) {
+
+            if(addresses==null || addresses.size()==0){
+                Toast.makeText(MainActivity.this, "No Location found", Toast.LENGTH_SHORT).show();
+            }
+
+            // Clears all the existing markers on the map
+            googleMap.clear();
+
+            // Adding Markers on Google Map for each matching address
+            for(int i=0;i<addresses.size();i++){
+
+                Address address = (Address) addresses.get(i);
+
+                // Creating an instance of GeoPoint, to display in Google Map
+                latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
+                String addressText = String.format("%s, %s",
+                        address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
+                        address.getCountryName());
+
+                markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title(addressText);
+
+                googleMap.addMarker(markerOptions);
+
+                // Locate the first location
+                if(i==0)
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+        }
+    }
+
 }

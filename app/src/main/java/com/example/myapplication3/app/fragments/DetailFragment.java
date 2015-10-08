@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
@@ -188,8 +187,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 tvBuy.setTextColor(getResources().getColor(R.color.color_green_up));
                 ivBuy.setImageResource(R.drawable.ic_green_arrow_up);
             }
-            Log.d("qqq", "ask: " + ask + " old ask: " + olgAsk);
-            Log.d("qqq", "bid: " + bid + " old bid: " + olgBid);
+//            Log.d("qqq", "ask: " + ask + " old ask: " + olgAsk);
+//            Log.d("qqq", "bid: " + bid + " old bid: " + olgBid);
             mLlContainerForCurrency.addView(mLlCurrencyItem);
         }
     }

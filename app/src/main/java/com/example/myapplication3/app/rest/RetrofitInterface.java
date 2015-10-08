@@ -1,6 +1,7 @@
 package com.example.myapplication3.app.rest;
 
 import com.example.myapplication3.app.models.GlobalModel;
+
 import retrofit.Callback;
 import retrofit.http.GET;
 

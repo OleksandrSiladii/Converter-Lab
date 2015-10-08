@@ -43,7 +43,7 @@ public class DBWorker {
 
         if (cursor.getCount() < 1) {
             addGlobalModelToDB(_globalModel);
-            Log.d("qqq", "create new DB : " + cursor.getCount());
+            Log.d("qqq", "create new DB  ");
         } else {
             Log.d("qqq", "cursor : " + cursor.getCount());
             cursor.moveToFirst();
@@ -181,8 +181,17 @@ public class DBWorker {
                 boolean currencyIsInBase = false;
                 if (cursor2.moveToFirst()) {
                     do {
-                        if (currency.getId().equals(cursor2.getString(cursor2.getColumnIndex(DBHelper.ID))) &&
-                                currency.getNameCurrency().equals(cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME_CURRENCY)))) {
+                        String currencyIdMod = organization.getId();
+                        String currencyIdDB = cursor2.getString(cursor2.getColumnIndex(DBHelper.ID));
+                        String currencyNameMod = currency.getNameCurrency();
+                        String currencyNameDB = cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME_CURRENCY));
+//                        Log.d("qqq", currencyIdMod);
+//                        Log.d("qqq", currencyIdDB);
+//                        Log.d("qqq", currencyNameMod);
+//                        Log.d("qqq", currencyNameDB);
+
+                        if ((currencyIdMod.equals(currencyIdDB)) &&
+                                (currencyNameMod.equals(currencyNameDB))) {
                             currencyIsInBase = true;
                             float oldBid = Float.parseFloat(cursor2.getString(cursor2.getColumnIndex(DBHelper.BID)));
                             float oldAsk = Float.parseFloat(cursor2.getString(cursor2.getColumnIndex(DBHelper.ASK)));
@@ -203,9 +212,9 @@ public class DBWorker {
                                 mContentValues.put(DBHelper.PREVIOUS_ASK, cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_ASK)));
                                 mContentValues.put(DBHelper.ASK, currency.getAsk());
                             }
-                            mContentValues.put(DBHelper.ID, cursor.getString(cursor.getColumnIndex(DBHelper.ID)));
-                            mContentValues.put(DBHelper.NAME_CURRENCY, cursor.getString(cursor.getColumnIndex(DBHelper.NAME_CURRENCY)));
-                            int rowId = cursor.getInt(cursor.getColumnIndex(DBHelper.UID));
+                            mContentValues.put(DBHelper.ID, currencyIdMod);
+                            mContentValues.put(DBHelper.NAME_CURRENCY, currencyNameMod);
+                            int rowId = cursor2.getInt(cursor2.getColumnIndex(DBHelper.UID));
                             mDB.delete(DBHelper.TABLE_NAME_CURRENCY2, DBHelper.UID + " = " + rowId, null);
                             mDB.insert(DBHelper.TABLE_NAME_CURRENCY2, null, mContentValues);
                         }
@@ -302,57 +311,8 @@ public class DBWorker {
             }
         }
 
-        cursor = mDB.query(DBHelper.TABLE_NAME_ORGANIZATION, null, null, null, null, null, null);
-        cursor2 = mDB.query(DBHelper.TABLE_NAME_CURRENCY1, null, null, null, null, null, null);
 
-        List<Organization> organizations = new ArrayList<Organization>();
-
-        if (cursor.moveToFirst()) {
-            try {
-                do {
-                    mOrganization = new Organization();
-                    mOrganization.setId(cursor.getString(cursor.getColumnIndex(DBHelper.ID)));
-                    mOrganization.setOldId(cursor.getInt(cursor.getColumnIndex(DBHelper.OLD_ID)));
-                    mOrganization.setOrgType(cursor.getInt(cursor.getColumnIndex(DBHelper.ORG_TYPE)));
-                    mOrganization.setTitle(cursor.getString(cursor.getColumnIndex(DBHelper.TITLE)));
-                    mOrganization.setRegionId(cursor.getString(cursor.getColumnIndex(DBHelper.REGION_ID)));
-                    mOrganization.setCityId(cursor.getString(cursor.getColumnIndex(DBHelper.CITY_ID)));
-                    mOrganization.setPhone(cursor.getString(cursor.getColumnIndex(DBHelper.PHONE)));
-                    mOrganization.setLink(cursor.getString(cursor.getColumnIndex(DBHelper.LINK)));
-                    mOrganization.setAddress(cursor.getString(cursor.getColumnIndex(DBHelper.ADDRESS)));
-
-                    mCurrencies = new ArrayList<Currency>();
-                    if (cursor2.moveToFirst()) {
-                        try {
-                            do {
-                                String id = cursor2.getString(cursor2.getColumnIndex(DBHelper.ID));
-
-                                if (id.equals(mOrganization.getId())) {
-                                    mCurrency = new Currency();
-                                    mCurrency.setNameCurrency(cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME)));
-                                    mCurrency.setAsk(cursor2.getString(cursor2.getColumnIndex(DBHelper.ASK)));
-                                    mCurrency.setBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.BID)));
-                                    mCurrency.setPreviousAck(cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_ASK)));
-                                    mCurrency.setPreviousBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_BID)));
-                                    mCurrencies.add(mCurrency);
-
-                                }
-
-                            } while (cursor2.moveToNext());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    mOrganization.setCurrenciesReal(mCurrencies);
-
-                    organizations.add(mOrganization);
-
-                } while (cursor.moveToNext());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        mGlobalModel.setOrganizations(organizations);
+        mGlobalModel.setOrganizations(getOrganizationList());
 
 
         cursor = mDB.query(DBHelper.TABLE_NAME_ORG_TYPES_REAL, null, null, null, null, null, null);
@@ -439,5 +399,61 @@ public class DBWorker {
         mGlobalModel.setCitiesReal(citiesReal);
         mDB.close();
         return mGlobalModel;
+    }
+
+    public List<Organization> getOrganizationList() {
+        mDBHelper = new DBHelper(mContext);
+        mDB =mDBHelper.getReadableDatabase();
+        cursor = mDB.query(DBHelper.TABLE_NAME_ORGANIZATION, null, null, null, null, null, null);
+        cursor2 = mDB.query(DBHelper.TABLE_NAME_CURRENCY1, null, null, null, null, null, null);
+
+        List<Organization> organizations = new ArrayList<Organization>();
+
+        if (cursor.moveToFirst()) {
+            try {
+                do {
+                    mOrganization = new Organization();
+                    mOrganization.setId(cursor.getString(cursor.getColumnIndex(DBHelper.ID)));
+                    mOrganization.setOldId(cursor.getInt(cursor.getColumnIndex(DBHelper.OLD_ID)));
+                    mOrganization.setOrgType(cursor.getInt(cursor.getColumnIndex(DBHelper.ORG_TYPE)));
+                    mOrganization.setTitle(cursor.getString(cursor.getColumnIndex(DBHelper.TITLE)));
+                    mOrganization.setRegionId(cursor.getString(cursor.getColumnIndex(DBHelper.REGION_ID)));
+                    mOrganization.setCityId(cursor.getString(cursor.getColumnIndex(DBHelper.CITY_ID)));
+                    mOrganization.setPhone(cursor.getString(cursor.getColumnIndex(DBHelper.PHONE)));
+                    mOrganization.setLink(cursor.getString(cursor.getColumnIndex(DBHelper.LINK)));
+                    mOrganization.setAddress(cursor.getString(cursor.getColumnIndex(DBHelper.ADDRESS)));
+
+                    mCurrencies = new ArrayList<Currency>();
+                    if (cursor2.moveToFirst()) {
+                        try {
+                            do {
+                                String id = cursor2.getString(cursor2.getColumnIndex(DBHelper.ID));
+
+                                if (id.equals(mOrganization.getId())) {
+                                    mCurrency = new Currency();
+                                    mCurrency.setNameCurrency(cursor2.getString(cursor2.getColumnIndex(DBHelper.NAME)));
+                                    mCurrency.setAsk(cursor2.getString(cursor2.getColumnIndex(DBHelper.ASK)));
+                                    mCurrency.setBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.BID)));
+                                    mCurrency.setPreviousAck(cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_ASK)));
+                                    mCurrency.setPreviousBid(cursor2.getString(cursor2.getColumnIndex(DBHelper.PREVIOUS_BID)));
+                                    mCurrencies.add(mCurrency);
+
+                                }
+
+                            } while (cursor2.moveToNext());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    mOrganization.setCurrenciesReal(mCurrencies);
+
+                    organizations.add(mOrganization);
+
+                } while (cursor.moveToNext());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return organizations;
     }
 }

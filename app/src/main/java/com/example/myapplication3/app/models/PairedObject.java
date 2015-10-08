@@ -1,7 +1,5 @@
 package com.example.myapplication3.app.models;
 
-import java.io.Serializable;
-
 /**
  * Created by omar on 9/22/15.
  */
