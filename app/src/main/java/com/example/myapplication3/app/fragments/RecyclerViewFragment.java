@@ -57,7 +57,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.recycler_view_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
         mProgressBarLoad = (ProgressBar) rootView.findViewById(R.id.pb_load_RF);

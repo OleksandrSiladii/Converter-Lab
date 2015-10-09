@@ -22,6 +22,7 @@ import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.models.PairedObject;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -41,18 +42,23 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     private int position;
     private DialogFragment mDialogFragmentInfo;
+    FloatingActionsMenu menuMultipleActions;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.scroll_view_detail_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_detail_scroll_view, container, false);
         mTvBankName = (TextView) rootView.findViewById(R.id.tv_name_of_bank_SF);
         mTvInformation = (TextView) rootView.findViewById(R.id.tv_information_SF);
         mLlContainerForCurrency = (LinearLayout) rootView.findViewById(R.id.ll_container_for_currency_SR);
 
+        menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
+        menuMultipleActions.setEnabled(true);
+
         rootView.findViewById(R.id.btn_call_FAB).setOnClickListener(this);
         rootView.findViewById(R.id.btn_map_FAB).setOnClickListener(this);
         rootView.findViewById(R.id.btn_link_FAB).setOnClickListener(this);
+//        rootView.findViewById(R.id.pink_icon).setOnClickListener(this);
 
         Bundle bundle = getArguments();
         Gson gson = new GsonBuilder().create();
@@ -82,6 +88,9 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_link_FAB:
                 goToLink();
                 break;
+//            case R.id.pink_icon:
+////                menuMultipleActions.pu
+//                break;
         }
     }
 
@@ -159,7 +168,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         List<Currency> currencyList = mOrganization.getCurrenciesReal();
 
         for (Currency item : currencyList) {
-            View mLlCurrencyItem = getActivity().getLayoutInflater().inflate(R.layout.currency_item, null);
+            View mLlCurrencyItem = getActivity().getLayoutInflater().inflate(R.layout.item_currency, null);
             TextView tvCurrency = (TextView) mLlCurrencyItem.findViewById(R.id.tv_currency_name_CI);
             TextView tvBuy = (TextView) mLlCurrencyItem.findViewById(R.id.tv_buy_CI);
             TextView tvSell = (TextView) mLlCurrencyItem.findViewById(R.id.tv_sell_CI);

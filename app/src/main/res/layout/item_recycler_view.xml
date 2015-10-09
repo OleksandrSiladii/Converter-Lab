@@ -2,9 +2,9 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
+    style="@style/CardView_style"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/card_view_margin"
     android:layout_marginLeft="@dimen/card_view_margin"
     android:layout_marginRight="@dimen/card_view_margin"
     card_view:cardBackgroundColor="@color/blue"
@@ -31,7 +31,6 @@
                 android:paddingLeft="@dimen/padding_in_card_view_to_text"
                 android:paddingTop="@dimen/padding_in_card_view_to_text"
                 android:text="Bank name"
-                android:textColor="@color/black"
                 android:textSize="@dimen/font_size_20sp"
                 android:textStyle="bold" />
 
@@ -44,7 +43,6 @@
                 android:layout_below="@+id/tv_bank_name_RI"
                 android:paddingLeft="10dp"
                 android:text="region"
-                android:textColor="@color/black"
                 android:textSize="@dimen/font_size_18sp" />
 
             <TextView
@@ -56,7 +54,6 @@
                 android:layout_below="@+id/tv_region_RI"
                 android:paddingLeft="@dimen/padding_in_card_view_to_text"
                 android:text="city"
-                android:textColor="@color/black"
                 android:textSize="@dimen/font_size_18sp" />
 
             <TextView
@@ -68,7 +65,6 @@
                 android:layout_below="@+id/tv_city_RI"
                 android:paddingRight="10dp"
                 android:text="000000000"
-                android:textColor="@color/black"
                 android:textSize="@dimen/font_size_16sp" />
 
             <TextView
@@ -78,7 +74,7 @@
                 android:layout_toLeftOf="@+id/tv_phone_RI"
                 android:layout_toStartOf="@+id/tv_phone_RI"
                 android:text="@string/tel"
-                android:textColor="@color/black"
+
                 android:textSize="@dimen/font_size_16sp" />
 
             <TextView
@@ -90,7 +86,6 @@
                 android:layout_below="@+id/tv_phone_RI"
                 android:paddingRight="10dp"
                 android:text="street address"
-                android:textColor="@color/black"
                 android:textSize="@dimen/font_size_16sp" />
 
             <TextView
@@ -100,7 +95,6 @@
                 android:layout_toLeftOf="@+id/tv_address_RI"
                 android:layout_toStartOf="@+id/tv_address_RI"
                 android:text="@string/address"
-                android:textColor="@color/black"
                 android:textSize="@dimen/font_size_16sp" />
         </RelativeLayout>
 
@@ -117,10 +111,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/btn_selector"
                 android:clickable="true"
                 android:padding="10dp"
-                android:src="@drawable/ic_link"
-                android:background="@drawable/btn_selector"/>
+                android:src="@drawable/ic_link" />
 
             <ImageView
                 android:id="@+id/iv_map_RI"

@@ -14,6 +14,6 @@
     <color name="half_black">#ffccd4da</color>
     <color name="white">#fafafa</color>
     <color name="white_pressed">#f1f1f1</color>
-    <color name="color_text">#ff8b9192</color>
-    <color name="bacgr">#fff7f7f7</color>
+    <color name="color_text">#ff47575e</color>
+
 </resources>

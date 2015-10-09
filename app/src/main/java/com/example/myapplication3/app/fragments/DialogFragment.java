@@ -44,7 +44,7 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.dialog_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_dialog, container, false);
         mImageView = (ImageView) rootView.findViewById(R.id.iv_bank_DF);
         rootView.findViewById(R.id.btn_share_DF).setOnClickListener(this);
         Button b = new Button(getActivity());
@@ -74,7 +74,7 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
 
         mOrganization = mGlobalModel.getOrganizations().get(position);
 
-        LinearLayout mLlBankItem = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.dialog_item, null);
+        LinearLayout mLlBankItem = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.item_dialog, null);
 
         TextView tvBankName = (TextView) mLlBankItem.findViewById(R.id.tv_name_of_bank_DI);
         TextView tvBankInformation = (TextView) mLlBankItem.findViewById(R.id.tv_information_DI);
@@ -88,7 +88,7 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
         tvBankInformation.setText(information);
 
         for (Currency currency : mOrganization.getCurrenciesReal()) {
-            View mLlCurrencyItem = getActivity().getLayoutInflater().inflate(R.layout.dialig_curreny_item, null);
+            View mLlCurrencyItem = getActivity().getLayoutInflater().inflate(R.layout.item_dialig_curreny, null);
             TextView tvCurrency = (TextView) mLlCurrencyItem.findViewById(R.id.tv_currency_name_DCI);
             TextView tvBuySell = (TextView) mLlCurrencyItem.findViewById(R.id.tv_currency_buy_sell_DCI);
             String ask = currency.getAsk().substring(0, 5);
@@ -106,9 +106,9 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
         DisplayMetrics metricsB = new DisplayMetrics();
         display.getMetrics(metricsB);
 
-        view.measure((int) (metricsB.widthPixels * 0.6), LinearLayout.LayoutParams.WRAP_CONTENT);
+        view.measure((int) (metricsB.widthPixels * 0.8), LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        mBitmap = Bitmap.createBitmap(((int) (metricsB.widthPixels * 0.5)), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap(((int) (metricsB.widthPixels * 0.7)), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mBitmap);
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         view.draw(canvas);

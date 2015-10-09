@@ -14,7 +14,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/padding_in_card_view_to_text"
         android:text="currency"
-        android:textColor="@color/black" />
+         />
 
     <LinearLayout
         android:layout_width="0dp"

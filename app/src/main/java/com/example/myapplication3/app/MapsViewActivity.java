@@ -35,31 +35,35 @@ public class MapsViewActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        SupportMapFragment supportMapFragment = (SupportMapFragment)
-                getSupportFragmentManager().findFragmentById(R.id.map);
+        try {
+            SupportMapFragment supportMapFragment = (SupportMapFragment)
+                    getSupportFragmentManager().findFragmentById(R.id.map);
 
-        googleMap = supportMapFragment.getMap();
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        ifTryAgain = false;
+            googleMap = supportMapFragment.getMap();
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            ifTryAgain = false;
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null && bundle.containsKey(CITY)) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null && bundle.containsKey(CITY)) {
 
-            String city = bundle.getString(CITY);
-            String region = bundle.getString(REGION);
-            String address = bundle.getString(ADDRESS);
+                String city = bundle.getString(CITY);
+                String region = bundle.getString(REGION);
+                String address = bundle.getString(ADDRESS);
 
-            location = " " + region;
-            if (!city.equals(region)) {
-                location += " " + city;
+                location = " " + region;
+                if (!city.equals(region)) {
+                    location += " " + city;
+                }
+                location += " " + address;
+
+                Log.d("qqq", location);
+
+                if (!location.isEmpty()) {
+                    new GeocoderTask().execute(location);
+                }
             }
-            location += " " + address;
-
-            Log.d("qqq", location);
-
-            if (!location.isEmpty()) {
-                new GeocoderTask().execute(location);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

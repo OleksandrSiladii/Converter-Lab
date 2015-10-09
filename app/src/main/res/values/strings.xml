@@ -11,7 +11,7 @@
     <string name="error_load">невозможно загрузить свежые данные</string>
     <string name="ok_load">данные обновлены</string>
     <string name="search">поиск по списку</string>
-    <string name="share">share</string>
+    <string name="share">SHARE</string>
     <string name="map">карта</string>
     <string name="link">сайт</string>
     <string name="call">позвонить</string>
