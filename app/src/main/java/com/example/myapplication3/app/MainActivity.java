@@ -33,11 +33,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener, DetailFragment.OnFragmentInteractionListener {
 
-
-    private DetailFragment detailFragment = new DetailFragment();
     private android.support.v7.app.ActionBar actionBar;
+    private DetailFragment detailFragment;
     private Bundle mBundle;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,24 +43,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         setContentView(R.layout.activity_main);
 
         DBWorker mDBWorker = new DBWorker(this);
-
         goRecyclerViewFragment(mDBWorker.getGlobalModelFromDB());
-
         startUpdatingService();
         supportCustomActionBar();
-
     }
 
     private void supportCustomActionBar() {
         actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayShowTitleEnabled(true);
-
-
     }
 
     private void startUpdatingService() {
-
         Intent intent = new Intent(this, UpdatingService.class);
         startService(intent);
     }
@@ -79,12 +71,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
     @Override
     public void goDetailFragment(GlobalModel globalModel, int position) {
-
         mBundle = new Bundle();
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(globalModel);
         mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
         mBundle.putInt(GlobalModel.TAG_POSITION, position);
+        detailFragment = new DetailFragment();
         detailFragment.setArguments(mBundle);
         actionBar.setTitle(globalModel.getOrganizations().get(position).getTitle());
         actionBar.setDisplayShowHomeEnabled(true);
@@ -92,10 +84,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
         addFragment(detailFragment);
     }
-
-    GoogleMap googleMap;
-    MarkerOptions markerOptions;
-    LatLng latLng;
 
     @Override
     public void goMapsFragment(GlobalModel globalModel, int position) {
@@ -124,8 +112,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         Log.d("qqq", "replace Fragment");
 
         if (!(fragment.isVisible())) {
-//            fragment.setRetainInstance(true);
-
             FragmentTransaction mFragmentTransaction = getFragmentManager().beginTransaction();
             mFragmentTransaction.setCustomAnimations(R.animator.add_frag_animator, R.animator.rem_frag_animator);
             mFragmentTransaction.replace(R.id.frgCont, fragment, "my_fragment");
@@ -167,57 +153,4 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     protected void onDestroy() {
         super.onDestroy();
     }
-
-    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
-
-        @Override
-        protected List<Address> doInBackground(String... locationName) {
-            // Creating an instance of Geocoder class
-            Geocoder geocoder = new Geocoder(MainActivity.this);
-            List<Address> addresses = null;
-
-            try {
-                // Getting a maximum of 3 Address that matches the input text
-                addresses = geocoder.getFromLocationName(locationName[0], 3);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return addresses;
-        }
-
-        @Override
-        protected void onPostExecute(List<Address> addresses) {
-
-            if (addresses == null || addresses.size() == 0) {
-                Toast.makeText(MainActivity.this, "No Location found", Toast.LENGTH_SHORT).show();
-            }
-
-            // Clears all the existing markers on the map
-            googleMap.clear();
-
-            // Adding Markers on Google Map for each matching address
-            for (int i = 0; i < addresses.size(); i++) {
-
-                Address address = (Address) addresses.get(i);
-
-                // Creating an instance of GeoPoint, to display in Google Map
-                latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-                String addressText = String.format("%s, %s",
-                        address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
-                        address.getCountryName());
-
-                markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(addressText);
-
-                googleMap.addMarker(markerOptions);
-
-                // Locate the first location
-                if (i == 0)
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            }
-        }
-    }
-
 }

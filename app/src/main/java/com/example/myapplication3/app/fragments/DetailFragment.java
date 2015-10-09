@@ -1,6 +1,5 @@
 package com.example.myapplication3.app.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
@@ -55,7 +53,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         mTvInformation = (TextView) rootView.findViewById(R.id.tv_information_SF);
         mLlContainerForCurrency = (LinearLayout) rootView.findViewById(R.id.ll_container_for_currency_SR);
 
-
         rootView.findViewById(R.id.btn_call_FAB).setOnClickListener(this);
         rootView.findViewById(R.id.btn_map_FAB).setOnClickListener(this);
         rootView.findViewById(R.id.btn_link_FAB).setOnClickListener(this);
@@ -66,7 +63,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         Gson gson = new GsonBuilder().create();
         mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
         position = bundle.getInt(GlobalModel.TAG_POSITION);
-
         mOrganization = mGlobalModel.getOrganizations().get(position);
 
         mTvBankName.setText(mOrganization.getTitle());
@@ -91,10 +87,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 }, 140);
             }
         });
-
         return rootView;
     }
-
 
     @Override
     public void onClick(View view) {
@@ -121,16 +115,11 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         String region = getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
         String city = getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
         String phoneNumber = mOrganization.getPhone();
-
         String allInformation = region + "\n";
-
         if (!region.equals(city))
             allInformation = allInformation + city + "\n";
-
         allInformation = allInformation + getActivity().getString(R.string.address) + " " + address + "\n"
                 + getActivity().getString(R.string.tel) + " " + phoneNumber;
-
-
         return allInformation;
     }
 
@@ -217,8 +206,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 tvBuy.setTextColor(getResources().getColor(R.color.color_green_up));
                 ivBuy.setImageResource(R.drawable.ic_green_arrow_up);
             }
-//            Log.d("qqq", "ask: " + ask + " old ask: " + olgAsk);
-//            Log.d("qqq", "bid: " + bid + " old bid: " + olgBid);
             mLlContainerForCurrency.addView(mLlCurrencyItem);
         }
     }
@@ -226,7 +213,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -242,8 +228,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
         mBundle.putInt(GlobalModel.TAG_POSITION, position);
         mDialogFragmentInfo.setArguments(mBundle);
-
         mDialogFragmentInfo.show(getFragmentManager(), "dlg2");
-
     }
 }

@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,12 +46,8 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     private GlobalModel mGlobalModel;
     private OnFragmentInteractionListener mListener;
     private ProgressBar mProgressBarLoad;
-    private SharedPreferences mSharedPreferences;
     private BroadcastReceiver mBroadcastReceiver;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private final static String SAVED_TEXT = "saved_text";
-    private String json;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +71,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
 
         if (mGlobalModel == null) {
             Bundle bundle = getArguments();
-            json = bundle.getString(GlobalModel.TAG_GLOBAL_MODEL);
+            String json = bundle.getString(GlobalModel.TAG_GLOBAL_MODEL);
             Gson gson = new GsonBuilder().create();
             mGlobalModel = gson.fromJson(json, GlobalModel.class);
         }
