@@ -17,4 +17,5 @@
     <string name="call">позвонить</string>
     <string name="DB_is_update">База данных обновлена</string>
     <string name="DB_update_OK">Обновление прошло успешно</string>
+    <string name="no_location_found">Адрес не найдено</string>
 </resources>

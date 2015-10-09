@@ -236,9 +236,10 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                 Bundle bundle = intent.getBundleExtra(GlobalModel.TAG_GLOBAL_MODEL);
                 Gson gson = new GsonBuilder().create();
                 mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
-                mSwipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
+                if (mSwipeRefreshLayout.isRefreshing()){
+                Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();}
 
+                mSwipeRefreshLayout.setRefreshing(false);
                 setModelInRecyclerView(mGlobalModel);
             }
         };

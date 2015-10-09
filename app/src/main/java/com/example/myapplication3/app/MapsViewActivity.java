@@ -25,8 +25,11 @@ public class MapsViewActivity extends FragmentActivity {
     MarkerOptions markerOptions;
     LatLng latLng;
     public static final String CITY = "CITY";
-    public static final String ADDRESS= "ADDRESS";
-    public static final String REGION= "REGION";
+    public static final String ADDRESS = "ADDRESS";
+    public static final String REGION = "REGION";
+    boolean ifTryAgain;
+    String location;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,24 +40,24 @@ public class MapsViewActivity extends FragmentActivity {
 
         googleMap = supportMapFragment.getMap();
         googleMap.getUiSettings().setZoomControlsEnabled(true);
+        ifTryAgain = false;
 
-
-       Bundle bundle = getIntent().getExtras();
-        if (bundle!=null && bundle.containsKey(CITY)){
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.containsKey(CITY)) {
 
             String city = bundle.getString(CITY);
             String region = bundle.getString(REGION);
             String address = bundle.getString(ADDRESS);
 
-            String location = " "+address;
+            location = " " + region;
             if (!city.equals(region)) {
-                location += ", " + city ;
+                location += " " + city;
             }
-            location += ", " + region;
+            location += " " + address;
 
-            Log.d("qqq" ,  location);
+            Log.d("qqq", location);
 
-            if(location!=null && !location.equals("")){
+            if (!location.isEmpty()) {
                 new GeocoderTask().execute(location);
             }
         }
@@ -69,7 +72,6 @@ public class MapsViewActivity extends FragmentActivity {
             List<Address> addresses = null;
 
             try {
-
                 addresses = geocoder.getFromLocationName(locationName[0], 1);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -80,31 +82,38 @@ public class MapsViewActivity extends FragmentActivity {
         @Override
         protected void onPostExecute(List<Address> addresses) {
 
-            if(addresses==null || addresses.size()==0)
-                Toast.makeText(MapsViewActivity.this, "No Location found", Toast.LENGTH_SHORT).show();
-
             googleMap.clear();
-            for(int i=0;i<addresses.size();i++){
+            if (addresses == null || addresses.size() == 0) {
+                if (!ifTryAgain) {
+                    location = location.substring(0, location.indexOf(','));
+                    new GeocoderTask().execute(location);
+                    ifTryAgain = true;
+                    Log.d("qqq", location);
 
-                Address address = (Address) addresses.get(i);
+                } else {
+                    Toast.makeText(MapsViewActivity.this, R.string.no_location_found, Toast.LENGTH_SHORT).show();
+                }
+            } else {
 
-                // Creating an instance of GeoPoint, to display in Google Map
-                latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                for (int i = 0; i < addresses.size(); i++) {
 
-                String addressText = String.format("%s, %s",
-                        address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
-                        address.getCountryName());
+                    Address address = (Address) addresses.get(i);
 
-                markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(addressText);
+                    latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
-                googleMap.addMarker(markerOptions);
-                Log.d("qqq", address.toString());
-                // Locate the first location
-//                if(i==0)
-//                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15.0f));
+                    String addressText = String.format("%s, %s",
+                            address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
+                            address.getCountryName());
+
+                    markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title(addressText);
+
+                    googleMap.addMarker(markerOptions);
+                    Log.d("qqq", address.toString());
+
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15.0f));
+                }
             }
         }
     }
