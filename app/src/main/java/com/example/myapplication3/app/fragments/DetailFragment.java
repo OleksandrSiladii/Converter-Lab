@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.models.PairedObject;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,23 +44,23 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     private int position;
     private DialogFragment mDialogFragmentInfo;
-    FloatingActionsMenu menuMultipleActions;
+    private FloatingActionsMenu menuMultipleActions;
+    private FloatingActionButton btnMenu;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_detail_scroll_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mTvBankName = (TextView) rootView.findViewById(R.id.tv_name_of_bank_SF);
         mTvInformation = (TextView) rootView.findViewById(R.id.tv_information_SF);
         mLlContainerForCurrency = (LinearLayout) rootView.findViewById(R.id.ll_container_for_currency_SR);
 
-        menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
-        menuMultipleActions.setEnabled(true);
 
         rootView.findViewById(R.id.btn_call_FAB).setOnClickListener(this);
         rootView.findViewById(R.id.btn_map_FAB).setOnClickListener(this);
         rootView.findViewById(R.id.btn_link_FAB).setOnClickListener(this);
-//        rootView.findViewById(R.id.pink_icon).setOnClickListener(this);
+        btnMenu = (FloatingActionButton) rootView.findViewById(R.id.pink_icon);
+        btnMenu.setOnClickListener(this);
 
         Bundle bundle = getArguments();
         Gson gson = new GsonBuilder().create();
@@ -72,6 +74,25 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         addLlInCardView();
         setHasOptionsMenu(true);
 
+        menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
+        menuMultipleActions.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        btnMenu.setVisibility(View.VISIBLE);
+                    }
+                }, 140);
+            }
+        });
+
+        actionBar = getActivity().getActionBar();
         return rootView;
     }
 
@@ -88,9 +109,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_link_FAB:
                 goToLink();
                 break;
-//            case R.id.pink_icon:
-////                menuMultipleActions.pu
-//                break;
+            case R.id.pink_icon:
+                menuMultipleActions.expand();
+                btnMenu.setVisibility(View.INVISIBLE);
+                break;
         }
     }
 

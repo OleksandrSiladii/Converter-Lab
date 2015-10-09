@@ -159,11 +159,11 @@
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
-    <!--<com.getbase.floatingactionbutton.FloatingActionButton
+    <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/pink_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        fab:fab_icon="@drawable/ic_menu"
+        fab:fab_icon="@drawable/ic_menu_m"
         fab:fab_colorNormal="@color/pink"
         fab:fab_colorPressed="@color/pink_pressed"
         android:layout_alignParentBottom="true"
@@ -172,5 +172,5 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        />-->
+        />
 </RelativeLayout>
