@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
@@ -37,7 +38,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private GlobalModel mGlobalModel;
     private Organization mOrganization;
-    private ActionBar actionBar;
     private TextView mTvBankName;
     private TextView mTvInformation;
     private LinearLayout mLlContainerForCurrency;
@@ -92,7 +92,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        actionBar = getActivity().getActionBar();
         return rootView;
     }
 

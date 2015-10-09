@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.myapplication3.app.DB.DBWorker;
@@ -30,11 +31,11 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener,DetailFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener, DetailFragment.OnFragmentInteractionListener {
 
 
     private DetailFragment detailFragment = new DetailFragment();
-
+    private android.support.v7.app.ActionBar actionBar;
     private Bundle mBundle;
 
 
@@ -48,6 +49,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         goRecyclerViewFragment(mDBWorker.getGlobalModelFromDB());
 
         startUpdatingService();
+        supportCustomActionBar();
+
+    }
+
+    private void supportCustomActionBar() {
+        actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayShowTitleEnabled(true);
+
+
     }
 
     private void startUpdatingService() {
@@ -75,19 +86,24 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
         mBundle.putInt(GlobalModel.TAG_POSITION, position);
         detailFragment.setArguments(mBundle);
+        actionBar.setTitle(globalModel.getOrganizations().get(position).getTitle());
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         addFragment(detailFragment);
     }
+
     GoogleMap googleMap;
     MarkerOptions markerOptions;
     LatLng latLng;
+
     @Override
     public void goMapsFragment(GlobalModel globalModel, int position) {
         mBundle = new Bundle();
         Organization organization = globalModel.getOrganizations().get(position);
         mBundle.putString(MapsViewActivity.CITY, getRealName(globalModel.getCitiesReal(), organization.getCityId()));
         mBundle.putString(MapsViewActivity.REGION, getRealName(globalModel.getRegionsReal(), organization.getRegionId()));
-        mBundle.putString(MapsViewActivity.ADDRESS,organization.getAddress());
+        mBundle.putString(MapsViewActivity.ADDRESS, organization.getAddress());
         Intent intent = new Intent(MainActivity.this, MapsViewActivity.class);
         intent.putExtras(mBundle);
         startActivity(intent);
@@ -113,23 +129,35 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
             FragmentTransaction mFragmentTransaction = getFragmentManager().beginTransaction();
             mFragmentTransaction.setCustomAnimations(R.animator.add_frag_animator, R.animator.rem_frag_animator);
             mFragmentTransaction.replace(R.id.frgCont, fragment, "my_fragment");
-            if (fragment == detailFragment){
-            mFragmentTransaction.addToBackStack(null);}
+            if (fragment == detailFragment) {
+                mFragmentTransaction.addToBackStack(null);
+            }
             mFragmentTransaction.commit();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
+            actionBar.setTitle(R.string.app_name);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(false);
         } else {
             super.onBackPressed();
         }
@@ -160,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         @Override
         protected void onPostExecute(List<Address> addresses) {
 
-            if(addresses==null || addresses.size()==0){
+            if (addresses == null || addresses.size() == 0) {
                 Toast.makeText(MainActivity.this, "No Location found", Toast.LENGTH_SHORT).show();
             }
 
@@ -168,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
             googleMap.clear();
 
             // Adding Markers on Google Map for each matching address
-            for(int i=0;i<addresses.size();i++){
+            for (int i = 0; i < addresses.size(); i++) {
 
                 Address address = (Address) addresses.get(i);
 
@@ -186,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
                 googleMap.addMarker(markerOptions);
 
                 // Locate the first location
-                if(i==0)
+                if (i == 0)
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         }

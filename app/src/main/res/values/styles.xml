@@ -6,7 +6,7 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:textColor">@color/color_text</item>
-
+        <!--<item name="homeAsUpIndicator">@drawable/ic_arrow_i</item>-->
     </style>
 
     <style name="menu_labels_style">
