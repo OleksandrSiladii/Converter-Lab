@@ -22,8 +22,6 @@ public class GlobalModel implements Serializable {
     private List<PairedObject> regionsReal;
     private List<PairedObject> citiesReal;
 
-    public static final String TAG_GLOBAL_MODEL = "TAG_GLOBAL_MODEL";
-    public static final String TAG_POSITION = "TAG_POSITION";
 
     public GlobalModel() {
     }

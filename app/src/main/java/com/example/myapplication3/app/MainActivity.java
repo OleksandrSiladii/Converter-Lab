@@ -1,18 +1,14 @@
 package com.example.myapplication3.app;
 
-
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.fragments.DetailFragment;
@@ -21,28 +17,24 @@ import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.models.PairedObject;
 import com.example.myapplication3.app.service.UpdatingService;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener, DetailFragment.OnFragmentInteractionListener {
 
-    private android.support.v7.app.ActionBar actionBar;
+    private ActionBar actionBar;
     private DetailFragment detailFragment;
     private Bundle mBundle;
+    private DBWorker mDBWorker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DBWorker mDBWorker = new DBWorker(this);
+        mDBWorker = new DBWorker(this);
         goRecyclerViewFragment(mDBWorker.getGlobalModelFromDB());
         startUpdatingService();
         supportCustomActionBar();
@@ -50,8 +42,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
     private void supportCustomActionBar() {
         actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayShowTitleEnabled(true);
+        if (!(actionBar == null)) {
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
     }
 
     private void startUpdatingService() {
@@ -63,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         mBundle = new Bundle();
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(globalModelFromDB);
-        mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
+        mBundle.putString(Constants.TAG_GLOBAL_MODEL, json);
         RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
         recyclerViewFragment.setArguments(mBundle);
         addFragment(recyclerViewFragment);
@@ -74,13 +67,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         mBundle = new Bundle();
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(globalModel);
-        mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
-        mBundle.putInt(GlobalModel.TAG_POSITION, position);
+        mBundle.putString(Constants.TAG_GLOBAL_MODEL, json);
+        mBundle.putInt(Constants.TAG_POSITION, position);
         detailFragment = new DetailFragment();
         detailFragment.setArguments(mBundle);
-        actionBar.setTitle(globalModel.getOrganizations().get(position).getTitle());
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         addFragment(detailFragment);
     }
@@ -89,9 +79,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     public void goMapsFragment(GlobalModel globalModel, int position) {
         mBundle = new Bundle();
         Organization organization = globalModel.getOrganizations().get(position);
-        mBundle.putString(MapsViewActivity.CITY, getRealName(globalModel.getCitiesReal(), organization.getCityId()));
-        mBundle.putString(MapsViewActivity.REGION, getRealName(globalModel.getRegionsReal(), organization.getRegionId()));
-        mBundle.putString(MapsViewActivity.ADDRESS, organization.getAddress());
+        mBundle.putString(Constants.TAG_CITY, getRealName(globalModel.getCitiesReal(), organization.getCityId()));
+        mBundle.putString(Constants.TAG_REGION, getRealName(globalModel.getRegionsReal(), organization.getRegionId()));
+        mBundle.putString(Constants.TAG_ADDRESS, organization.getAddress());
         Intent intent = new Intent(MainActivity.this, MapsViewActivity.class);
         intent.putExtras(mBundle);
         startActivity(intent);
@@ -109,11 +99,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     }
 
     private void addFragment(Fragment fragment) {
-        Log.d("qqq", "replace Fragment");
+        Log.d(Constants.TAG_LOG, "replace Fragment");
 
         if (!(fragment.isVisible())) {
             FragmentTransaction mFragmentTransaction = getFragmentManager().beginTransaction();
-            mFragmentTransaction.setCustomAnimations(R.animator.add_frag_animator, R.animator.rem_frag_animator);
+            mFragmentTransaction.setCustomAnimations(R.animator.add_frag_animator, R.animator.rem_frag_animator,
+                    R.animator.add2_frag_animator, R.animator.rem2_frag_animator);
             mFragmentTransaction.replace(R.id.frgCont, fragment, "my_fragment");
             if (fragment == detailFragment) {
                 mFragmentTransaction.addToBackStack(null);

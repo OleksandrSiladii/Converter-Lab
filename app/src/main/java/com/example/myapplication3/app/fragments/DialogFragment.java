@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
@@ -69,8 +70,8 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
     private LinearLayout getConstructionView() {
         Bundle bundle = getArguments();
         Gson gson = new GsonBuilder().create();
-        mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
-        position = bundle.getInt(GlobalModel.TAG_POSITION);
+        mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
+        position = bundle.getInt(Constants.TAG_POSITION);
 
         mOrganization = mGlobalModel.getOrganizations().get(position);
 

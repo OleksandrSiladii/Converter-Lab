@@ -5,10 +5,14 @@
     <dimen name="card_view_margin">10dp</dimen>
     <dimen name="margin_liner_layout">15dp</dimen>
     <dimen name="text_size_name_of_bank">15sp</dimen>
-
+    <dimen name="floating_action_menu_margin">16dp</dimen>
     <dimen name="font_size_18sp">18sp</dimen>
     <dimen name="font_size_16sp">16sp</dimen>
     <dimen name="font_size_20sp">20sp</dimen>
     <dimen name="card_corner_radius">0dp</dimen>
     <dimen name="padding_in_card_view_to_text">10dp</dimen>
+    <dimen name="scroll_view_margin">40dp</dimen>
+    <dimen name="button_share_margin">-40dp</dimen>
+    <dimen name="padding_text_buy_sell_left">100dp</dimen>
+    <dimen name="padding_text_buy_sell_right">25dp</dimen>
 </resources>

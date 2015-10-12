@@ -22,13 +22,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private GlobalModel mGlobalModel;
     private List<Organization> mOrganizationList;
-    private Organization mOrganization;
     private static MyClickListener myClickListener;
 
 
-        public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-                public TextView mBankName;
+        public TextView mBankName;
         public TextView mRegion;
         public TextView mCity;
         public TextView mPhone;
@@ -77,7 +76,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        mOrganization = mOrganizationList.get(position);
+        Organization mOrganization = mOrganizationList.get(position);
 
         String region = getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
         String city = getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
@@ -88,11 +87,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         if (!region.equals(city)) {
             holder.mCity.setText(getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId()));
-        }
-        else {
+        } else {
             holder.mCity.setText("");
         }
-
     }
 
     @Override
@@ -115,8 +112,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void setOnItemClickListener(MyClickListener myClickListener) {
         this.myClickListener = myClickListener;
     }
-
-
 
     public interface MyClickListener {
         void onItemClick(int position, View v);

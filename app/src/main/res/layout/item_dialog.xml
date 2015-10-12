@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_view_margin"
-        android:text="BANK"
         android:textSize="@dimen/text_size_name_of_bank"
         android:textStyle="bold" />
 
@@ -21,8 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/card_view_margin"
-        android:layout_marginLeft="@dimen/card_view_margin"
-        android:text="REGION \n CITY" />
+        android:layout_marginLeft="@dimen/card_view_margin" />
 
     <LinearLayout
         android:id="@+id/ll_container_for_currency_DI"

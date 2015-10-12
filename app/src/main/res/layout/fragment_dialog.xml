@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#fff">
 
 
     <ScrollView
@@ -9,14 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="@dimen/scroll_view_margin"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/iv_bank_DF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            />
     </ScrollView>
 
     <Button
@@ -25,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/scrollView"
-        android:layout_marginTop="-40dp"
+        android:layout_marginTop="@dimen/button_share_margin"
         android:text="@string/share" />
 
 </RelativeLayout>

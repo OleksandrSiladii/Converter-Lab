@@ -10,7 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="CUR"
         android:textColor="@color/pink"
         android:textStyle="bold" />
 
@@ -20,9 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:gravity="center"
-        android:paddingLeft="100dp"
-        android:paddingRight="25dp"
-        android:text="BUY/SELL"
+        android:paddingLeft="@dimen/padding_text_buy_sell_left"
+        android:paddingRight="@dimen/padding_text_buy_sell_right"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

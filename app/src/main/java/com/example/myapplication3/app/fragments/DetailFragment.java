@@ -1,11 +1,13 @@
 package com.example.myapplication3.app.fragments;
 
 import android.app.Activity;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
@@ -61,8 +64,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
         Bundle bundle = getArguments();
         Gson gson = new GsonBuilder().create();
-        mGlobalModel = gson.fromJson(bundle.getString(GlobalModel.TAG_GLOBAL_MODEL), GlobalModel.class);
-        position = bundle.getInt(GlobalModel.TAG_POSITION);
+        mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
+        position = bundle.getInt(Constants.TAG_POSITION);
         mOrganization = mGlobalModel.getOrganizations().get(position);
 
         mTvBankName.setText(mOrganization.getTitle());
@@ -88,6 +91,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+       if ( ((AppCompatActivity) getActivity()).getSupportActionBar() != null){
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mGlobalModel.getOrganizations().get(position).getTitle());
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);}
     }
 
     @Override
@@ -138,7 +150,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         List<Organization> organizationList = mGlobalModel.getOrganizations();
         Organization organization = organizationList.get(position);
         String link = organization.getLink();
-        Log.d("qqq", link);
+        Log.d(Constants.TAG_LOG, link);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(link));
         startActivity(intent);
@@ -225,9 +237,9 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         Bundle mBundle = new Bundle();
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(mGlobalModel);
-        mBundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
-        mBundle.putInt(GlobalModel.TAG_POSITION, position);
+        mBundle.putString(Constants.TAG_GLOBAL_MODEL, json);
+        mBundle.putInt(Constants.TAG_POSITION, position);
         mDialogFragmentInfo.setArguments(mBundle);
-        mDialogFragmentInfo.show(getFragmentManager(), "dlg2");
+        mDialogFragmentInfo.show(getActivity().getFragmentManager(), Constants.TAG_FRAGMENT);
     }
 }

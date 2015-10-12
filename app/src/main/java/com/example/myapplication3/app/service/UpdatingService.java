@@ -1,6 +1,7 @@
 package com.example.myapplication3.app.service;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,12 +10,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
@@ -32,8 +35,7 @@ import retrofit.client.Response;
  */
 public class UpdatingService extends Service {
 
-    public final static String BROADCAST_ACTION = "com.example.myapplication3.app.service.BROADCAST_ACTION";
-    public final static String ALARM_ACTION = "com.example.myapplication3.app.service.ALARM_ACTION";
+
     GlobalModel mGlobalModel;
     DBWorker mDBWorker;
     NotificationManager mNotificationManager;
@@ -53,7 +55,7 @@ public class UpdatingService extends Service {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("qqq", "MyService onStartCommand");
+        Log.d(Constants.TAG_LOG, "MyService onStartCommand");
 
         mDBWorker = new DBWorker(getApplicationContext());
 
@@ -73,13 +75,13 @@ public class UpdatingService extends Service {
                 if ((mGlobalModel == null) || !(mGlobalModel.getDate().equals(globalModel.getDate()))) {
                     AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
                     addModelInDB.execute(globalModel);
-                    Log.d("qqq", "add new model in DB asyncTask");
+                    Log.d(Constants.TAG_LOG, "add new model in DB asyncTask");
                     if (!(mGlobalModel == null)) {
                         globalModel.setOrganizations(mDBWorker.getOrganizationList());
                     }
                     sendBroadcast(globalModel);
                 } else {
-                    Log.d("qqq", "new model and DB is same");
+                    Log.d(Constants.TAG_LOG, "new model and DB is same");
                     sendBroadcast(mGlobalModel);
                 }
 
@@ -95,19 +97,19 @@ public class UpdatingService extends Service {
     }
 
     void showNotification() {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        mBuilder.setContentTitle(getResources().getString(R.string.DB_is_update));
-        mBuilder.setContentText(getResources().getString(R.string.DB_update_OK));
-        mBuilder.setAutoCancel(true);
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(111, mBuilder.build());
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(getResources().getString(R.string.DB_is_update))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getResources().getString(R.string.DB_is_update))
+                .setContentText(getResources().getString(R.string.DB_update_OK))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(false)
+                .build();
+
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, notification);
+
     }
 
     class AddModelInDBAsyncTask extends AsyncTask<GlobalModel, Void, GlobalModel> {
@@ -127,27 +129,25 @@ public class UpdatingService extends Service {
 
             mGlobalModel = globalModel;
         }
-
     }
 
     private void sendBroadcast(GlobalModel globalModel) {
         mNotificationManager.cancelAll();
-
-        Intent intent = new Intent(UpdatingService.BROADCAST_ACTION);
-        Log.d("qqq", "send Broadcast from service with model");
+        Intent intent = new Intent(Constants.TAG_BROADCAST_ACTION);
+        Log.d(Constants.TAG_LOG, "send Broadcast from service with model");
 
         Bundle bundle = new Bundle();
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(globalModel);
-        bundle.putString(GlobalModel.TAG_GLOBAL_MODEL, json);
-        intent.putExtra(GlobalModel.TAG_GLOBAL_MODEL, bundle);
+        bundle.putString(Constants.TAG_GLOBAL_MODEL, json);
+        intent.putExtra(Constants.TAG_GLOBAL_MODEL, bundle);
 
         sendBroadcast(intent);
     }
 
     private void startAlarmManager() {
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(ALARM_ACTION);
+        Intent intent = new Intent(Constants.TAG_ALARM_ACTION);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1800000, pendingIntent);
     }
@@ -157,10 +157,10 @@ public class UpdatingService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 getGlobalModel();
-                Log.d("qqq", "alarm");
+                Log.d(Constants.TAG_LOG, "alarm");
             }
         };
-        IntentFilter intentFilter = new IntentFilter(ALARM_ACTION);
+        IntentFilter intentFilter = new IntentFilter(Constants.TAG_ALARM_ACTION);
         registerReceiver(alarmReceiver, intentFilter);
     }
 }
