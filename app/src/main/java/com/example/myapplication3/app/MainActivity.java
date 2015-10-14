@@ -79,24 +79,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     public void goMapsFragment(GlobalModel globalModel, int position) {
         mBundle = new Bundle();
         Organization organization = globalModel.getOrganizations().get(position);
-        mBundle.putString(Constants.TAG_CITY, getRealName(globalModel.getCitiesReal(), organization.getCityId()));
-        mBundle.putString(Constants.TAG_REGION, getRealName(globalModel.getRegionsReal(), organization.getRegionId()));
+        mBundle.putString(Constants.TAG_CITY, Constants.getRealName(globalModel.getCitiesReal(), organization.getCityId()));
+        mBundle.putString(Constants.TAG_REGION, Constants.getRealName(globalModel.getRegionsReal(), organization.getRegionId()));
         mBundle.putString(Constants.TAG_ADDRESS, organization.getAddress());
         Intent intent = new Intent(MainActivity.this, MapsViewActivity.class);
         intent.putExtras(mBundle);
         startActivity(intent);
     }
 
-    private String getRealName(List<PairedObject> pairedObjectList, String id) {
-        for (PairedObject item : pairedObjectList) {
-            if (item.getId().equals(id)) {
-                String rez = item.getName();
-                rez = rez.replaceAll("\"", "");
-                return rez;
-            }
-        }
-        return id;
-    }
+
 
     private void addFragment(Fragment fragment) {
         Log.d(Constants.TAG_LOG, "replace Fragment");

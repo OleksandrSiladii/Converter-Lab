@@ -178,8 +178,8 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
 
         List<Organization> organizations = new ArrayList<Organization>();
         for (Organization organization : mGlobalModel.getOrganizations()) {
-            String city = getRealName(mGlobalModel.getCitiesReal(), organization.getCityId());
-            String region = getRealName(mGlobalModel.getRegionsReal(), organization.getRegionId());
+            String city = Constants.getRealName(mGlobalModel.getCitiesReal(), organization.getCityId());
+            String region = Constants.getRealName(mGlobalModel.getRegionsReal(), organization.getRegionId());
 
             if (organization.getTitle().contains(searchText) || organization.getAddress().contains(searchText)
                     || city.contains(searchText) || region.contains(searchText)) {
@@ -206,18 +206,6 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         super.onDetach();
         getActivity().unregisterReceiver(mBroadcastReceiver);
     }
-
-    private String getRealName(List<PairedObject> pairedObjectList, String id) {
-        for (PairedObject item : pairedObjectList) {
-            if (item.getId().equals(id)) {
-                String rez = item.getName();
-                rez = rez.replaceAll("\"", "");
-                return rez;
-            }
-        }
-        return id;
-    }
-
 
     private void regBroadcastReceiver() {
         mBroadcastReceiver = new BroadcastReceiver() {

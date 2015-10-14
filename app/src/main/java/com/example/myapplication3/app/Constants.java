@@ -1,5 +1,9 @@
 package com.example.myapplication3.app;
 
+import com.example.myapplication3.app.models.PairedObject;
+
+import java.util.List;
+
 /**
  * Created by sasha on 12.10.2015.
  */
@@ -13,4 +17,15 @@ public class Constants {
     public final static String TAG_FRAGMENT = "frag";
     public final static String TAG_BROADCAST_ACTION = "com.example.myapplication3.app.service.BROADCAST_ACTION";
     public final static String TAG_ALARM_ACTION = "com.example.myapplication3.app.service.ALARM_ACTION";
+
+    public static String getRealName(List<PairedObject> pairedObjectList, String id) {
+        for (PairedObject item : pairedObjectList) {
+            if (item.getId().equals(id)) {
+                String rez = item.getName();
+                rez = rez.replaceAll("\"", "");
+                return rez;
+            }
+        }
+        return id;
+    }
 }

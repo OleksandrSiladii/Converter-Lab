@@ -124,8 +124,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private String getInformation() {
 
         String address = mOrganization.getAddress();
-        String region = getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
-        String city = getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
+        String region = Constants.getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
+        String city = Constants.getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
         String phoneNumber = mOrganization.getPhone();
         String allInformation = region + "\n";
         if (!region.equals(city))
@@ -133,17 +133,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         allInformation = allInformation + getActivity().getString(R.string.address) + " " + address + "\n"
                 + getActivity().getString(R.string.tel) + " " + phoneNumber;
         return allInformation;
-    }
-
-    private String getRealName(List<PairedObject> pairedObjectList, String id) {
-        for (PairedObject item : pairedObjectList) {
-            if (item.getId().equals(id)) {
-                String rez = item.getName();
-                rez = rez.replaceAll("\"", "");
-                return rez;
-            }
-        }
-        return id;
     }
 
     private void goToLink() {
@@ -198,7 +187,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             ImageView ivBuy = (ImageView) mLlCurrencyItem.findViewById(R.id.iv_buy_CI);
             tvBuy.setText(item.getAsk());
             tvSell.setText(item.getBid());
-            tvCurrency.setText(getRealName(mGlobalModel.getCurrenciesReal(), item.getNameCurrency()));
+            tvCurrency.setText(Constants.getRealName(mGlobalModel.getCurrenciesReal(), item.getNameCurrency()));
 
             float ask = Float.parseFloat(item.getAsk());
             float olgAsk = Float.parseFloat(item.getPreviousAck());

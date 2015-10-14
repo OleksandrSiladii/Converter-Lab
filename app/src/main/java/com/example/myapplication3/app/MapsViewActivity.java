@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -21,7 +22,7 @@ import java.util.List;
  * Created by sasha on 07.10.2015.
  */
 public class MapsViewActivity extends FragmentActivity {
-    private GoogleMap googleMap;
+    private GoogleMap mGoogleMap;
     private MarkerOptions markerOptions;
     private LatLng latLng;
 
@@ -37,8 +38,13 @@ public class MapsViewActivity extends FragmentActivity {
             SupportMapFragment supportMapFragment = (SupportMapFragment)
                     getSupportFragmentManager().findFragmentById(R.id.map);
 
-            googleMap = supportMapFragment.getMap();
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    googleMap.getUiSettings().setZoomControlsEnabled(true);
+                    mGoogleMap = googleMap;
+                }
+            });
             ifTryAgain = false;
 
             Bundle bundle = getIntent().getExtras();
@@ -84,7 +90,7 @@ public class MapsViewActivity extends FragmentActivity {
         @Override
         protected void onPostExecute(List<Address> addresses) {
 
-            googleMap.clear();
+            mGoogleMap.clear();
             if (addresses == null || addresses.size() == 0) {
                 if (!ifTryAgain) {
                     location = location.substring(0, location.indexOf(','));
@@ -111,10 +117,10 @@ public class MapsViewActivity extends FragmentActivity {
                     markerOptions.position(latLng);
                     markerOptions.title(addressText);
 
-                    googleMap.addMarker(markerOptions);
+                    mGoogleMap.addMarker(markerOptions);
                     Log.d(Constants.TAG_LOG, address.toString());
 
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15.0f));
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15.0f));
                 }
             }
         }
