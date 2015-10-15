@@ -1,30 +1,30 @@
-package com.example.myapplication3.app.service;
+package com.example.myapplication3.app.workers;
 
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.GlobalModel;
+import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.rest.RetrofitAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -76,20 +76,13 @@ public class UpdatingService extends Service {
                     AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
                     addModelInDB.execute(globalModel);
                     Log.d(Constants.TAG_LOG, "add new model in DB asyncTask");
-                    if (!(mGlobalModel == null)) {
-                        globalModel.setOrganizations(mDBWorker.getOrganizationList());
-                    }
-                    sendBroadcast(globalModel);
                 } else {
                     Log.d(Constants.TAG_LOG, "new model and DB is same");
                     sendBroadcast(mGlobalModel);
                 }
-
             }
 
-
             @Override
-
             public void failure(RetrofitError error) {
                 sendBroadcast(mGlobalModel);
             }
@@ -109,7 +102,6 @@ public class UpdatingService extends Service {
 
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify(0, notification);
-
     }
 
     class AddModelInDBAsyncTask extends AsyncTask<GlobalModel, Void, GlobalModel> {
@@ -128,6 +120,7 @@ public class UpdatingService extends Service {
             super.onPostExecute(globalModel);
 
             mGlobalModel = globalModel;
+            sendBroadcast(globalModel);
         }
     }
 

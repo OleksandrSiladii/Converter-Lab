@@ -1,13 +1,16 @@
 package com.example.myapplication3.app;
 
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.Loader;
 import android.location.Address;
-import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.myapplication3.app.workers.Constants;
+import com.example.myapplication3.app.workers.GeocoderLoader;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -15,16 +18,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by sasha on 07.10.2015.
  */
-public class MapsViewActivity extends FragmentActivity {
+public class MapsViewActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<List<Address>> {
     private GoogleMap mGoogleMap;
     private MarkerOptions markerOptions;
     private LatLng latLng;
+    private Loader loader;
+    Context context;
 
     private boolean ifTryAgain;
     private String location;
@@ -33,6 +37,8 @@ public class MapsViewActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        context = getApplicationContext();
 
         try {
             SupportMapFragment supportMapFragment = (SupportMapFragment)
@@ -63,7 +69,7 @@ public class MapsViewActivity extends FragmentActivity {
                 Log.d(Constants.TAG_LOG, location);
 
                 if (!location.isEmpty()) {
-                    new GeocoderTask().execute(location);
+                    startLoader(location);
                 }
             }
         } catch (Exception e) {
@@ -71,58 +77,60 @@ public class MapsViewActivity extends FragmentActivity {
         }
     }
 
-    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
+    private void startLoader(String location) {
+        Bundle bndl1 = new Bundle();
+        bndl1.putString(Constants.TAG_LOCATION_NAME, location);
+        if(loader != null)
+        getLoaderManager().restartLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
+        else
+              getLoaderManager().initLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
+    }
 
-        @Override
-        protected List<Address> doInBackground(String... locationName) {
-
-            Geocoder geocoder = new Geocoder(MapsViewActivity.this);
-            List<Address> addresses = null;
-
-            try {
-                addresses = geocoder.getFromLocationName(locationName[0], 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return addresses;
+    @Override
+    public Loader<List<Address>> onCreateLoader(int id, Bundle bundle) {
+        if (id == Constants.LOADER_ID_2) {
+            loader = new GeocoderLoader(getApplicationContext(), bundle);
+            Log.d(Constants.TAG_LOG, "start LOADER G");
         }
+        return loader;
+    }
 
-        @Override
-        protected void onPostExecute(List<Address> addresses) {
+    @Override
+    public void onLoadFinished(Loader<List<Address>> loader2, List<Address> addresses) {
+        Log.d(Constants.TAG_LOG, "end LOADER G");
+        mGoogleMap.clear();
+        if (addresses == null || addresses.size() == 0) {
+            if (!ifTryAgain) {
+                location = location.substring(0, location.indexOf(','));
+                ifTryAgain = true;
+                Log.d(Constants.TAG_LOG, location);
 
-            mGoogleMap.clear();
-            if (addresses == null || addresses.size() == 0) {
-                if (!ifTryAgain) {
-                    location = location.substring(0, location.indexOf(','));
-                    new GeocoderTask().execute(location);
-                    ifTryAgain = true;
-                    Log.d(Constants.TAG_LOG, location);
+                startLoader(location);
 
-                } else {
-                    Toast.makeText(MapsViewActivity.this, R.string.no_location_found, Toast.LENGTH_SHORT).show();
-                }
             } else {
-
-                for (int i = 0; i < addresses.size(); i++) {
-
-                    Address address = (Address) addresses.get(i);
-
-                    latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-                    String addressText = String.format("%s, %s",
-                            address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
-                            address.getCountryName());
-
-                    markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-                    markerOptions.title(addressText);
-
-                    mGoogleMap.addMarker(markerOptions);
-                    Log.d(Constants.TAG_LOG, address.toString());
-
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15.0f));
-                }
+                Toast.makeText(MapsViewActivity.this, R.string.no_location_found, Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Address address = (Address) addresses.get(0);
+
+            latLng = new LatLng(address.getLatitude(), address.getLongitude());
+
+            String addressText = String.format("%s, %s",
+                    address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
+                    address.getCountryName());
+
+            markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title(addressText);
+
+            mGoogleMap.addMarker(markerOptions);
+            Log.d(Constants.TAG_LOG, address.toString());
+
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15.0f));
         }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Address>> loader) {
     }
 }

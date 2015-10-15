@@ -2,8 +2,12 @@ package com.example.myapplication3.app;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -15,19 +19,20 @@ import com.example.myapplication3.app.fragments.DetailFragment;
 import com.example.myapplication3.app.fragments.RecyclerViewFragment;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
-import com.example.myapplication3.app.models.PairedObject;
-import com.example.myapplication3.app.service.UpdatingService;
+import com.example.myapplication3.app.workers.Constants;
+import com.example.myapplication3.app.workers.GetModelFromDBLoader;
+import com.example.myapplication3.app.workers.UpdatingService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener, DetailFragment.OnFragmentInteractionListener {
-
+public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener,
+        DetailFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<GlobalModel> {
     private ActionBar actionBar;
     private DetailFragment detailFragment;
     private Bundle mBundle;
     private DBWorker mDBWorker;
+   private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +40,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         setContentView(R.layout.activity_main);
 
         mDBWorker = new DBWorker(this);
-        goRecyclerViewFragment(mDBWorker.getGlobalModelFromDB());
+//        goRecyclerViewFragment(mDBWorker.getGlobalModelFromDB());
+        loader= getLoaderManager().initLoader(Constants.LOADER_ID_1, null, this);
+        loader.forceLoad();
+
         startUpdatingService();
         supportCustomActionBar();
     }
@@ -88,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     }
 
 
-
     private void addFragment(Fragment fragment) {
         Log.d(Constants.TAG_LOG, "replace Fragment");
 
@@ -135,4 +142,31 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     protected void onDestroy() {
         super.onDestroy();
     }
+
+    @Override
+    public Loader<GlobalModel> onCreateLoader(int id, Bundle bundle) {
+        Loader<GlobalModel> loader = null;
+        if (id == Constants.LOADER_ID_1) {
+            loader = new GetModelFromDBLoader(this);
+            Log.d("qqq","start LOADER");
+        }
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<GlobalModel> loader, final GlobalModel globalModel) {
+        Log.d("qqq","end LOADER");
+        final int WHAT = 1;
+        Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                if(msg.what == WHAT) goRecyclerViewFragment(globalModel);
+            }
+        };
+        handler.sendEmptyMessage(WHAT);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<GlobalModel> loader) {}
 }

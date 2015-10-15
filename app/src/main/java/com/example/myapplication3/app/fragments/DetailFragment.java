@@ -19,12 +19,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.myapplication3.app.Constants;
+import com.example.myapplication3.app.workers.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
-import com.example.myapplication3.app.models.PairedObject;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;

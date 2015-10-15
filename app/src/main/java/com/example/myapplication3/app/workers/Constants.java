@@ -1,4 +1,4 @@
-package com.example.myapplication3.app;
+package com.example.myapplication3.app.workers;
 
 import com.example.myapplication3.app.models.PairedObject;
 
@@ -14,9 +14,12 @@ public class Constants {
     public static final String TAG_CITY = "CITY";
     public static final String TAG_ADDRESS = "ADDRESS";
     public static final String TAG_REGION = "REGION";
+    public static final String TAG_LOCATION_NAME = "locationName";
     public final static String TAG_FRAGMENT = "frag";
     public final static String TAG_BROADCAST_ACTION = "com.example.myapplication3.app.service.BROADCAST_ACTION";
     public final static String TAG_ALARM_ACTION = "com.example.myapplication3.app.service.ALARM_ACTION";
+    public final static int LOADER_ID_1 = 1;
+    public final static int LOADER_ID_2 = 2;
 
     public static String getRealName(List<PairedObject> pairedObjectList, String id) {
         for (PairedObject item : pairedObjectList) {

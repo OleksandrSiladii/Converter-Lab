@@ -21,13 +21,12 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.myapplication3.app.Constants;
+import com.example.myapplication3.app.workers.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.adapters.RecyclerAdapter;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
-import com.example.myapplication3.app.models.PairedObject;
-import com.example.myapplication3.app.service.UpdatingService;
+import com.example.myapplication3.app.workers.UpdatingService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

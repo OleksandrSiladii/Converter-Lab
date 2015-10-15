@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.myapplication3.app.Constants;
+import com.example.myapplication3.app.workers.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
