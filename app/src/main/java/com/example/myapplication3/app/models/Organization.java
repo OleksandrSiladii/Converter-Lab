@@ -39,8 +39,8 @@ public class Organization  {
             currency.setBid(small.getBid());
             currenciesReal.add(currency);
         }
-
     }
+
 
     public String getId() {
         return id;

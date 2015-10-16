@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.example.myapplication3.app.workers.Constants;
 import com.example.myapplication3.app.R;
-import com.example.myapplication3.app.adapters.RecyclerAdapter;
+import com.example.myapplication3.app.adapters.OrganizationRecyclerAdapter;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.workers.UpdatingService;
@@ -61,10 +61,6 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                 R.color.color_green_up,
                 R.color.black_semi_transparent);
 
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
 
         if (mGlobalModel == null) {
             Bundle bundle = getArguments();
@@ -73,6 +69,10 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
             mGlobalModel = gson.fromJson(json, GlobalModel.class);
         }
 
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
         setModelInRecyclerView(mGlobalModel);
 
         setHasOptionsMenu(true);
@@ -82,11 +82,11 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
 
     public void setModelInRecyclerView(final GlobalModel globalModel) {
 
-        mAdapter = new RecyclerAdapter(globalModel);
+        mAdapter = new OrganizationRecyclerAdapter(globalModel);
         mAdapter.notifyDataSetChanged();
 
         mRecyclerView.setAdapter(mAdapter);
-        ((RecyclerAdapter) mAdapter).setOnItemClickListener(new RecyclerAdapter.MyClickListener() {
+        ((OrganizationRecyclerAdapter) mAdapter).setOnItemClickListener(new OrganizationRecyclerAdapter.MyClickListener() {
 
             @Override
             public void onItemClick(int position, View view) {

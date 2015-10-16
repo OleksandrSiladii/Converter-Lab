@@ -13,12 +13,12 @@ import android.widget.TextView;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
-import com.example.myapplication3.app.models.PairedObject;
+import com.example.myapplication3.app.workers.Constants;
 
 import java.util.List;
 
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class OrganizationRecyclerAdapter extends RecyclerView.Adapter<OrganizationRecyclerAdapter.ViewHolder> {
 
     private GlobalModel mGlobalModel;
     private List<Organization> mOrganizationList;
@@ -57,16 +57,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-    public RecyclerAdapter(GlobalModel _globalModel) {
+    public OrganizationRecyclerAdapter(GlobalModel _globalModel) {
         mGlobalModel = _globalModel;
         mOrganizationList = mGlobalModel.getOrganizations();
     }
 
     @Override
-    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                         int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_recycler_view, parent, false);
+    public OrganizationRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_view, parent, false);
 
 
         ViewHolder vh = new ViewHolder(v);
@@ -78,15 +76,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         Organization mOrganization = mOrganizationList.get(position);
 
-        String region = getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
-        String city = getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
+        String region = Constants.getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
+        String city = Constants.getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
         holder.mPhone.setText(mOrganization.getPhone());
         holder.mAddress.setText(mOrganization.getAddress());
         holder.mBankName.setText(mOrganization.getTitle());
         holder.mRegion.setText(region);
 
         if (!region.equals(city)) {
-            holder.mCity.setText(getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId()));
+            holder.mCity.setText(Constants.getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId()));
         } else {
             holder.mCity.setText("");
         }
@@ -96,17 +94,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public int getItemCount() {
 
         return mOrganizationList.size();
-    }
-
-    private String getRealName(List<PairedObject> pairedObjectList, String id) {
-        for (PairedObject item : pairedObjectList) {
-            if (item.getId().equals(id)) {
-                String rez = item.getName();
-                rez = rez.replaceAll("\"", "");
-                return rez;
-            }
-        }
-        return id;
     }
 
     public void setOnItemClickListener(MyClickListener myClickListener) {

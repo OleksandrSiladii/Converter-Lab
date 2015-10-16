@@ -21,7 +21,7 @@ public class DrawView extends View {
     private String title, city, region;
     private Paint paint;
     private int wightCanvas;
-    private int wight, q;
+    private int q;
 
     public DrawView(Context context, GlobalModel globalModel, int position, int wightDisplay) {
         super(context);
@@ -47,7 +47,7 @@ public class DrawView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        wight = 0;
+        int wight = 0;
         canvas.drawColor(getResources().getColor(R.color.color_of_cardView));
 
         paint.setColor(getResources().getColor(R.color.black));

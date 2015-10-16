@@ -6,105 +6,94 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ScrollView
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewName"
+        style="CardView_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/card_view_margin"
+        card_view:cardCornerRadius="@dimen/card_corner_radius">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_in_card_view_to_text">
+
+
+            <TextView
+                android:id="@+id/tv_name_of_bank_SF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_in_card_view_to_text"
+                android:textColor="@color/color_of_bank_name"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_information_SF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/padding_in_card_view_to_text" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewCar"
+        style="CardView_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardViewName"
+        android:layout_marginLeft="@dimen/card_view_margin"
+        android:layout_marginRight="@dimen/card_view_margin"
+        card_view:cardCornerRadius="@dimen/card_corner_radius">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/padding_in_card_view_to_text">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center_vertical"
+                android:text="@string/name_of_currency" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/card_view_margin"
-                android:layout_marginTop="@dimen/card_view_margin"
-                android:layout_marginRight="@dimen/card_view_margin"
-                card_view:cardCornerRadius="@dimen/card_corner_radius"
-                style="CardView_style">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/padding_in_card_view_to_text">
-
-
-                    <TextView
-                        android:id="@+id/tv_name_of_bank_SF"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/padding_in_card_view_to_text"
-                        android:textColor="@color/color_of_bank_name"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_information_SF"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/padding_in_card_view_to_text"
-                         />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/card_view_margin"
-                android:layout_marginRight="@dimen/card_view_margin"
-                card_view:cardCornerRadius="@dimen/card_corner_radius"
-                style="CardView_style">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/padding_in_card_view_to_text">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center_vertical"
-                        android:text="@string/name_of_currency"
-                         />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="@string/buy_sell"
-
-                        android:paddingTop="@dimen/padding_in_card_view_to_text"
-                        android:paddingBottom="@dimen/padding_in_card_view_to_text"/>
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="CardView_style"
-                android:layout_marginLeft="@dimen/card_view_margin"
-                android:layout_marginRight="@dimen/card_view_margin"
-                card_view:cardCornerRadius="@dimen/card_corner_radius">
-
-                <LinearLayout
-                    android:id="@+id/ll_container_for_currency_SR"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                </LinearLayout>
-
-
-            </android.support.v7.widget.CardView>
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/padding_in_card_view_to_text"
+                android:paddingTop="@dimen/padding_in_card_view_to_text"
+                android:text="@string/buy_sell" />
         </LinearLayout>
-    </ScrollView>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        style="CardView_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardViewCar"
+        android:layout_marginBottom="@dimen/card_view_margin"
+        android:layout_marginLeft="@dimen/card_view_margin"
+        android:layout_marginRight="@dimen/card_view_margin"
+        card_view:cardCornerRadius="@dimen/card_corner_radius">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_FD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+
+    </android.support.v7.widget.CardView>
+
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/multiple_actions"
@@ -119,11 +108,7 @@
         fab:fab_addButtonColorNormal="@color/pink"
         fab:fab_addButtonColorPressed="@color/pink_pressed"
         fab:fab_icon="@drawable/ic_menu"
-
         fab:fab_labelStyle="@style/menu_labels_style">
-<!--
-        fab:fab_addButtonPlusIconColor="@color/half_black"
--->
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_map_FAB"
@@ -161,14 +146,13 @@
         android:id="@+id/pink_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        fab:fab_icon="@drawable/ic_menu_m"
-        fab:fab_colorNormal="@color/pink"
-        fab:fab_colorPressed="@color/pink_pressed"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/floating_action_menu_margin"
         android:layout_marginEnd="@dimen/floating_action_menu_margin"
         android:layout_marginRight="@dimen/floating_action_menu_margin"
-        />
+        fab:fab_colorNormal="@color/pink"
+        fab:fab_colorPressed="@color/pink_pressed"
+        fab:fab_icon="@drawable/ic_menu_m" />
 </RelativeLayout>

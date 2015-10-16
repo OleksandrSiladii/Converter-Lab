@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication3.app.adapters.DetailRecyclerAdapter;
 import com.example.myapplication3.app.workers.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
@@ -40,12 +43,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private Organization mOrganization;
     private TextView mTvBankName;
     private TextView mTvInformation;
-    private LinearLayout mLlContainerForCurrency;
     private OnFragmentInteractionListener mListener;
     private int position;
     private DialogFragment mDialogFragmentInfo;
     private FloatingActionsMenu menuMultipleActions;
     private FloatingActionButton btnMenu;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,7 +58,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mTvBankName = (TextView) rootView.findViewById(R.id.tv_name_of_bank_SF);
         mTvInformation = (TextView) rootView.findViewById(R.id.tv_information_SF);
-        mLlContainerForCurrency = (LinearLayout) rootView.findViewById(R.id.ll_container_for_currency_SR);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_FD);
+        mRecyclerView.setHasFixedSize(true);
 
         rootView.findViewById(R.id.btn_call_FAB).setOnClickListener(this);
         rootView.findViewById(R.id.btn_map_FAB).setOnClickListener(this);
@@ -69,7 +75,13 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
         mTvBankName.setText(mOrganization.getTitle());
         mTvInformation.setText(getInformation());
-        addLlInCardView();
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new DetailRecyclerAdapter(mOrganization.getCurrenciesReal(), mGlobalModel.getCurrenciesReal());
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mAdapter);
+
         setHasOptionsMenu(true);
 
         menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
@@ -95,10 +107,11 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       if ( ((AppCompatActivity) getActivity()).getSupportActionBar() != null){
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mGlobalModel.getOrganizations().get(position).getTitle());
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);}
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mGlobalModel.getOrganizations().get(position).getTitle());
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -156,7 +169,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
 
     public interface OnFragmentInteractionListener {
 
-        public void goMapsFragment(GlobalModel globalModel, int position);
+        void goMapsFragment(GlobalModel globalModel, int position);
     }
 
     @Override
@@ -171,43 +184,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             showDialog();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void addLlInCardView() {
-
-        List<Currency> currencyList = mOrganization.getCurrenciesReal();
-
-        for (Currency item : currencyList) {
-            View mLlCurrencyItem = getActivity().getLayoutInflater().inflate(R.layout.item_currency, null);
-            TextView tvCurrency = (TextView) mLlCurrencyItem.findViewById(R.id.tv_currency_name_CI);
-            TextView tvBuy = (TextView) mLlCurrencyItem.findViewById(R.id.tv_buy_CI);
-            TextView tvSell = (TextView) mLlCurrencyItem.findViewById(R.id.tv_sell_CI);
-            ImageView ivSell = (ImageView) mLlCurrencyItem.findViewById(R.id.iv_sell_CI);
-            ImageView ivBuy = (ImageView) mLlCurrencyItem.findViewById(R.id.iv_buy_CI);
-            tvBuy.setText(item.getAsk());
-            tvSell.setText(item.getBid());
-            tvCurrency.setText(Constants.getRealName(mGlobalModel.getCurrenciesReal(), item.getNameCurrency()));
-
-            float ask = Float.parseFloat(item.getAsk());
-            float olgAsk = Float.parseFloat(item.getPreviousAck());
-            float bid = Float.parseFloat(item.getBid());
-            float olgBid = Float.parseFloat(item.getPreviousBid());
-            if (bid < olgBid) {
-                tvSell.setTextColor(getResources().getColor(R.color.color_red_down));
-                ivSell.setImageResource(R.drawable.ic_red_arrow_down);
-            } else {
-                tvSell.setTextColor(getResources().getColor(R.color.color_green_up));
-                ivSell.setImageResource(R.drawable.ic_green_arrow_up);
-            }
-            if (ask < olgAsk) {
-                tvBuy.setTextColor(getResources().getColor(R.color.color_red_down));
-                ivBuy.setImageResource(R.drawable.ic_red_arrow_down);
-            } else {
-                tvBuy.setTextColor(getResources().getColor(R.color.color_green_up));
-                ivBuy.setImageResource(R.drawable.ic_green_arrow_up);
-            }
-            mLlContainerForCurrency.addView(mLlCurrencyItem);
-        }
     }
 
     @Override
