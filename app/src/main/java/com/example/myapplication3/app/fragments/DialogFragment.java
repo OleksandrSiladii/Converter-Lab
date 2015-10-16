@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.myapplication3.app.workers.Constants;
@@ -25,6 +27,7 @@ import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.models.PairedObject;
+import com.example.myapplication3.app.workers.DrawView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -46,12 +49,21 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_dialog, container, false);
-        mImageView = (ImageView) rootView.findViewById(R.id.iv_bank_DF);
-        rootView.findViewById(R.id.btn_share_DF).setOnClickListener(this);
-        Button b = new Button(getActivity());
-        b.setText("gh");
-        createBitmap();
+        LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.ll);
 
+        rootView.findViewById(R.id.btn_share_DF).setOnClickListener(this);
+
+        Bundle bundle = getArguments();
+        Gson gson = new GsonBuilder().create();
+        mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
+        position = bundle.getInt(Constants.TAG_POSITION);
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        DrawView v = new DrawView(getActivity(), mGlobalModel, position, size.x);
+
+        ll.addView(v);
+        mBitmap = getBitmapFromView(v);
         return rootView;
     }
 
@@ -61,45 +73,6 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
 
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
-    }
-
-    private void createBitmap() {
-        mImageView.setImageBitmap(getBitmapFromView(getConstructionView()));
-    }
-
-    private LinearLayout getConstructionView() {
-        Bundle bundle = getArguments();
-        Gson gson = new GsonBuilder().create();
-        mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
-        position = bundle.getInt(Constants.TAG_POSITION);
-
-        mOrganization = mGlobalModel.getOrganizations().get(position);
-
-        LinearLayout mLlBankItem = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.item_dialog, null);
-
-        TextView tvBankName = (TextView) mLlBankItem.findViewById(R.id.tv_name_of_bank_DI);
-        TextView tvBankInformation = (TextView) mLlBankItem.findViewById(R.id.tv_information_DI);
-        LinearLayout llCurrencies = (LinearLayout) mLlBankItem.findViewById(R.id.ll_container_for_currency_DI);
-        String region = getRealName(mGlobalModel.getRegionsReal(), mOrganization.getRegionId());
-        String city = getRealName(mGlobalModel.getCitiesReal(), mOrganization.getCityId());
-        String information;
-        if (region.equals(city)) information = region;
-        else information = region + "\n" + city;
-        tvBankName.setText(mOrganization.getTitle());
-        tvBankInformation.setText(information);
-
-        for (Currency currency : mOrganization.getCurrenciesReal()) {
-            View mLlCurrencyItem = getActivity().getLayoutInflater().inflate(R.layout.item_dialig_curreny, null);
-            TextView tvCurrency = (TextView) mLlCurrencyItem.findViewById(R.id.tv_currency_name_DCI);
-            TextView tvBuySell = (TextView) mLlCurrencyItem.findViewById(R.id.tv_currency_buy_sell_DCI);
-            String ask = currency.getAsk().substring(0, 5);
-            String bid = currency.getBid().substring(0, 5);
-            tvCurrency.setText(currency.getNameCurrency());
-            tvBuySell.setText(ask + "/" + bid);
-            llCurrencies.addView(mLlCurrencyItem);
-        }
-
-        return mLlBankItem;
     }
 
     private Bitmap getBitmapFromView(View view) {
@@ -114,19 +87,8 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         view.draw(canvas);
         return mBitmap;
-
     }
 
-    private String getRealName(List<PairedObject> pairedObjectList, String id) {
-        for (PairedObject item : pairedObjectList) {
-            if (item.getId().equals(id)) {
-                String rez = item.getName();
-                rez = rez.replaceAll("\"", "");
-                return rez;
-            }
-        }
-        return id;
-    }
 
     @Override
     public void onClick(View view) {
@@ -164,10 +126,6 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
                     }
                 }
             }.execute(filePath);
-
-
-//            file.setReadable(true, false);
-
         }
     }
 }

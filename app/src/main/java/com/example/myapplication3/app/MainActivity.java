@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         setContentView(R.layout.activity_main);
 
         mDBWorker = new DBWorker(this);
-//        goRecyclerViewFragment(mDBWorker.getGlobalModelFromDB());
+
         loader= getLoaderManager().initLoader(Constants.LOADER_ID_1, null, this);
         loader.forceLoad();
 
@@ -148,14 +148,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         Loader<GlobalModel> loader = null;
         if (id == Constants.LOADER_ID_1) {
             loader = new GetModelFromDBLoader(this);
-            Log.d("qqq","start LOADER");
+            Log.d(Constants.TAG_LOG,"start LOADER");
         }
         return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<GlobalModel> loader, final GlobalModel globalModel) {
-        Log.d("qqq","end LOADER");
+        Log.d(Constants.TAG_LOG,"end LOADER");
         final int WHAT = 1;
         Handler handler = new Handler(){
             @Override
