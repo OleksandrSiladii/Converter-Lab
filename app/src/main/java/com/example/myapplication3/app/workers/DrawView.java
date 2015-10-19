@@ -2,10 +2,8 @@ package com.example.myapplication3.app.workers;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.View;
 
 import com.example.myapplication3.app.R;

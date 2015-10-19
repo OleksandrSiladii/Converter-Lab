@@ -50,27 +50,14 @@ public class GlobalModel implements Serializable {
 
     public void setCurrencies(JsonElement currencies) {
         this.currencies = currencies;
-
     }
 
     public void setRegions(JsonElement regionsJSon) {
         this.regions = regionsJSon;
-
     }
 
     public void setCities(JsonElement citiesJSon) {
         this.cities = citiesJSon;
-
-    }
-
-    public void deresialize() {
-        this.orgTypesReal = CustomDeserializer.getPairedObjectList(orgTypes);
-        this.currenciesReal = CustomDeserializer.getPairedObjectList(currencies);
-        this.regionsReal = CustomDeserializer.getPairedObjectList(regions);
-        this.citiesReal = CustomDeserializer.getPairedObjectList(cities);
-
-        for (Organization item : organizations)
-            item.deserialize();
     }
 
     public List<Organization> getOrganizations() {
@@ -123,5 +110,15 @@ public class GlobalModel implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void deserialize() {
+        this.orgTypesReal = CustomDeserializer.getPairedObjectList(orgTypes);
+        this.currenciesReal = CustomDeserializer.getPairedObjectList(currencies);
+        this.regionsReal = CustomDeserializer.getPairedObjectList(regions);
+        this.citiesReal = CustomDeserializer.getPairedObjectList(cities);
+
+        for (Organization item : organizations)
+            item.deserialize();
     }
 }

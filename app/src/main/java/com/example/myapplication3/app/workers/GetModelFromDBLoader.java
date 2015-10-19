@@ -20,7 +20,7 @@ public class GetModelFromDBLoader extends AsyncTaskLoader<GlobalModel> {
 
     @Override
     public GlobalModel loadInBackground() {
-        Log.d("qqq", "work LOADER");
+        Log.d(Constants.TAG_LOG, "work LOADER");
 
         DBWorker dbWorker = new DBWorker(context);
         return dbWorker.getGlobalModelFromDB();

@@ -1,5 +1,6 @@
 package com.example.myapplication3.app.rest;
 
+import com.example.myapplication3.app.workers.Constants;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -24,7 +25,7 @@ public abstract class RetrofitAdapter {
             client.setConnectTimeout(10, TimeUnit.SECONDS); // connect timeout
             client.setReadTimeout(10, TimeUnit.SECONDS);
 
-            restAdapter = new RestAdapter.Builder().setEndpoint(ApiConstants.SERVER_URL).setClient(new OkClient
+            restAdapter = new RestAdapter.Builder().setEndpoint(Constants.SERVER_URL).setClient(new OkClient
                     (client)).build();
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
             retrofitInterface = restAdapter.create(RetrofitInterface.class);

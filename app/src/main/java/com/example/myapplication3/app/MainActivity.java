@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.fragments.DetailFragment;
@@ -31,17 +32,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     private ActionBar actionBar;
     private DetailFragment detailFragment;
     private Bundle mBundle;
-    private DBWorker mDBWorker;
-   private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDBWorker = new DBWorker(this);
-
-        loader= getLoaderManager().initLoader(Constants.LOADER_ID_1, null, this);
+        Loader loader = getLoaderManager().initLoader(Constants.LOADER_ID_1, null, this);
         loader.forceLoad();
 
         startUpdatingService();
@@ -160,7 +157,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         Handler handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                if(msg.what == WHAT) goRecyclerViewFragment(globalModel);
+                if(msg.what == WHAT) {
+                    goRecyclerViewFragment(globalModel);
+                findViewById(R.id.pb_MA).setVisibility(View.INVISIBLE);}
             }
         };
         handler.sendEmptyMessage(WHAT);

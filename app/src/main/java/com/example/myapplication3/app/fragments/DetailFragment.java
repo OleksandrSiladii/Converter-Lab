@@ -17,14 +17,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.myapplication3.app.adapters.DetailRecyclerAdapter;
 import com.example.myapplication3.app.workers.Constants;
 import com.example.myapplication3.app.R;
-import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.getbase.floatingactionbutton.FloatingActionButton;

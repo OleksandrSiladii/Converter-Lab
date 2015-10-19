@@ -15,35 +15,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.example.myapplication3.app.workers.Constants;
 import com.example.myapplication3.app.R;
-import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;
-import com.example.myapplication3.app.models.Organization;
-import com.example.myapplication3.app.models.PairedObject;
 import com.example.myapplication3.app.workers.DrawView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.List;
 
 /**
  * Created by sasha on 01.10.2015.
  */
 public class DialogFragment extends android.app.DialogFragment implements View.OnClickListener {
-    private ImageView mImageView;
-    private GlobalModel mGlobalModel;
-    private int position;
+
     private Bitmap mBitmap;
-    private Organization mOrganization;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,8 +44,8 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
 
         Bundle bundle = getArguments();
         Gson gson = new GsonBuilder().create();
-        mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
-        position = bundle.getInt(Constants.TAG_POSITION);
+        GlobalModel mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
+        int position = bundle.getInt(Constants.TAG_POSITION);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

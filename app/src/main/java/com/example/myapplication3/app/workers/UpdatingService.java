@@ -19,12 +19,9 @@ import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.GlobalModel;
-import com.example.myapplication3.app.models.Organization;
 import com.example.myapplication3.app.rest.RetrofitAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -70,7 +67,7 @@ public class UpdatingService extends Service {
         RetrofitAdapter.getInterface().getJson(new Callback<GlobalModel>() {
             @Override
             public void success(GlobalModel globalModel, Response response) {
-                globalModel.deresialize();
+                globalModel.deserialize();
 
                 if ((mGlobalModel == null) || !(mGlobalModel.getDate().equals(globalModel.getDate()))) {
                     AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();

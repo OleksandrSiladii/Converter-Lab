@@ -20,6 +20,10 @@ public class Constants {
     public final static String TAG_ALARM_ACTION = "com.example.myapplication3.app.service.ALARM_ACTION";
     public final static int LOADER_ID_1 = 1;
     public final static int LOADER_ID_2 = 2;
+    public static final String SERVER_URL = "http://resources.finance.ua/ru/public";
+    public static final String JSON_PATH = "/currency-cash.json";
+
+
 
     public static String getRealName(List<PairedObject> pairedObjectList, String id) {
         for (PairedObject item : pairedObjectList) {

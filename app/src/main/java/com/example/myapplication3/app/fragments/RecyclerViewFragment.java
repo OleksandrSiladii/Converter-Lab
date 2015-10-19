@@ -158,6 +158,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_recycler_view_fragment, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search_menu).getActionView();
+        searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                                               public boolean onQueryTextChange(String text) {
                                                   getRezOfSearch(text);
@@ -214,8 +215,9 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                 Bundle bundle = intent.getBundleExtra(Constants.TAG_GLOBAL_MODEL);
                 Gson gson = new GsonBuilder().create();
                 mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
-                if (mSwipeRefreshLayout.isRefreshing()){
-                Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();}
+                if (mSwipeRefreshLayout.isRefreshing()) {
+                    Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
+                }
 
                 mSwipeRefreshLayout.setRefreshing(false);
                 setModelInRecyclerView(mGlobalModel);
