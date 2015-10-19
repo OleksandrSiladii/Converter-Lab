@@ -1,12 +1,11 @@
 package com.example.myapplication3.app.rest;
 
-import com.example.myapplication3.app.workers.Constants;
+import com.example.myapplication3.app.Constants;
 import com.squareup.okhttp.OkHttpClient;
-
-import java.util.concurrent.TimeUnit;
-
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by omar on 9/22/15.

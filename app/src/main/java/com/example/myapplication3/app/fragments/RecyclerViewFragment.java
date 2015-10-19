@@ -13,22 +13,15 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.SearchView;
 import android.widget.Toast;
-
-import com.example.myapplication3.app.workers.Constants;
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.adapters.OrganizationRecyclerAdapter;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
-import com.example.myapplication3.app.workers.UpdatingService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.myapplication3.app.service.UpdatingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -211,14 +204,19 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
             public void onReceive(Context context, Intent intent) {
 
                 Bundle bundle = intent.getBundleExtra(Constants.TAG_GLOBAL_MODEL);
-                Gson gson = new GsonBuilder().create();
-                mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
+
+                mGlobalModel =  bundle.getParcelable(Constants.TAG_GLOBAL_MODEL);
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
                 }
 
                 mSwipeRefreshLayout.setRefreshing(false);
+
+
+
                 setModelInRecyclerView(mGlobalModel);
+
+
             }
         };
         IntentFilter intentFilter = new IntentFilter(Constants.TAG_BROADCAST_ACTION);

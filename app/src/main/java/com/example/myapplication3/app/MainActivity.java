@@ -8,29 +8,24 @@ import android.content.Loader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.fragments.DetailFragment;
 import com.example.myapplication3.app.fragments.RecyclerViewFragment;
+import com.example.myapplication3.app.loaders.GetModelFromDBLoader;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
-import com.example.myapplication3.app.workers.Constants;
-import com.example.myapplication3.app.workers.GetModelFromDBLoader;
-import com.example.myapplication3.app.workers.UpdatingService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.myapplication3.app.service.UpdatingService;
 
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener,
         DetailFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<GlobalModel> {
     private ActionBar actionBar;
-    private DetailFragment detailFragment;
+
     private Bundle mBundle;
 
     @Override
@@ -38,8 +33,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Loader loader = getLoaderManager().initLoader(Constants.LOADER_ID_1, null, this);
-        loader.forceLoad();
+         getLoaderManager().initLoader(Constants.LOADER_ID_1, null, this).forceLoad();
 
         startUpdatingService();
         supportCustomActionBar();
@@ -67,12 +61,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
     @Override
     public void goDetailFragment(GlobalModel globalModel, int position) {
-        mBundle = new Bundle();
-        mBundle.putParcelable(Constants.TAG_GLOBAL_MODEL, globalModel);
-        mBundle.putInt(Constants.TAG_POSITION, position);
-        detailFragment = new DetailFragment();
-        detailFragment.setArguments(mBundle);
-        addFragment(detailFragment);
+
+        addFragment(DetailFragment.getInstance(globalModel, position));
     }
 
     @Override
@@ -96,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
             mFragmentTransaction.setCustomAnimations(R.animator.add_frag_animator, R.animator.rem_frag_animator,
                     R.animator.add2_frag_animator, R.animator.rem2_frag_animator);
             mFragmentTransaction.replace(R.id.frgCont, fragment, "my_fragment");
-            if (fragment == detailFragment) {
+            if (fragment instanceof DetailFragment) {
                 mFragmentTransaction.addToBackStack(null);
             }
             mFragmentTransaction.commit();
@@ -137,12 +127,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
     @Override
     public Loader<GlobalModel> onCreateLoader(int id, Bundle bundle) {
-        Loader<GlobalModel> loader = null;
+
         if (id == Constants.LOADER_ID_1) {
-            loader = new GetModelFromDBLoader(this);
-            Log.d(Constants.TAG_LOG,"start LOADER");
+            return  new GetModelFromDBLoader(this);
+
         }
-        return loader;
+        return null;
     }
 
     @Override

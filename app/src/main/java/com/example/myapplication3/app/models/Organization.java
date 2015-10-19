@@ -123,6 +123,7 @@ public class Organization implements Parcelable {
         currenciesReal = currencies;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -139,7 +140,7 @@ public class Organization implements Parcelable {
         dest.writeString(this.phone);
         dest.writeString(this.address);
         dest.writeString(this.link);
-        dest.writeList(this.currenciesReal);
+        dest.writeTypedList(currenciesReal);
 
     }
 
@@ -156,9 +157,8 @@ public class Organization implements Parcelable {
         this.phone = in.readString();
         this.address = in.readString();
         this.link = in.readString();
-        this.currenciesReal = new ArrayList<Currency>();
-        in.readList(this.currenciesReal, List.class.getClassLoader());
-         
+        this.currenciesReal = in.createTypedArrayList(Currency.CREATOR);
+
     }
 
     public static final Parcelable.Creator<Organization> CREATOR = new Parcelable.Creator<Organization>() {

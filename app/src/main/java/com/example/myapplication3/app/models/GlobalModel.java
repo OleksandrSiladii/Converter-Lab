@@ -4,14 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.JsonElement;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by omar on 9/22/15.
  */
-public class GlobalModel  implements Parcelable {
+public class GlobalModel implements Parcelable {
     private List<Organization> organizations;
     private JsonElement orgTypes;
     private JsonElement currencies;
@@ -29,9 +27,7 @@ public class GlobalModel  implements Parcelable {
     public GlobalModel() {
     }
 
-    public GlobalModel(String sourceId, String date, List<Organization> organizations,
-                       List<PairedObject> orgTypesReal, List<PairedObject> currenciesReal,
-                       List<PairedObject> regionsReal, List<PairedObject> citiesReal) {
+    public GlobalModel(String sourceId, String date, List<Organization> organizations, List<PairedObject> orgTypesReal, List<PairedObject> currenciesReal, List<PairedObject> regionsReal, List<PairedObject> citiesReal) {
         this.sourceId = sourceId;
         this.date = date;
         this.organizations = organizations;
@@ -116,32 +112,28 @@ public class GlobalModel  implements Parcelable {
     }
 
 
-
     public static void deserializeAsync(final GlobalModel _model, final DeserializeCallback _callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                    GlobalModel mModel = _model;
-                    mModel.orgTypesReal = CustomDeserializer.getPairedObjectList(mModel.orgTypes);
-                    mModel.currenciesReal = CustomDeserializer.getPairedObjectList(mModel.currencies);
-                    mModel.regionsReal = CustomDeserializer.getPairedObjectList(mModel.regions);
-                    mModel.citiesReal = CustomDeserializer.getPairedObjectList(mModel.cities);
+                GlobalModel mModel = _model;
+                mModel.orgTypesReal = CustomDeserializer.getPairedObjectList(mModel.orgTypes);
+                mModel.currenciesReal = CustomDeserializer.getPairedObjectList(mModel.currencies);
+                mModel.regionsReal = CustomDeserializer.getPairedObjectList(mModel.regions);
+                mModel.citiesReal = CustomDeserializer.getPairedObjectList(mModel.cities);
 
-                    for (Organization item : mModel.getOrganizations())
-                        item.deserialize();
-                    _callback.onDeserialized( mModel);
+                for (Organization item : mModel.getOrganizations())
+                    item.deserialize();
+                _callback.onDeserialized(mModel);
             }
         }).start();
 
     }
 
     public interface DeserializeCallback {
-        void onDeserialized( GlobalModel model);
+        void onDeserialized(GlobalModel model);
     }
-
-
-
 
     @Override
     public int describeContents() {
@@ -150,34 +142,28 @@ public class GlobalModel  implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeList(this.organizations);
 
         dest.writeString(this.sourceId);
         dest.writeString(this.date);
-        dest.writeList(this.orgTypesReal);
-        dest.writeList(this.currenciesReal);
-        dest.writeList(this.regionsReal);
-        dest.writeList(this.citiesReal);
+        dest.writeTypedList(organizations);
+        dest.writeTypedList(orgTypesReal);
+        dest.writeTypedList(currenciesReal);
+        dest.writeTypedList(regionsReal);
+        dest.writeTypedList(citiesReal);
     }
 
     protected GlobalModel(Parcel in) {
-        this.organizations = new ArrayList<Organization>();
-        in.readList(this.organizations, List.class.getClassLoader());
-
 
         this.sourceId = in.readString();
         this.date = in.readString();
-        this.orgTypesReal = new ArrayList<PairedObject>();
-        in.readList(this.orgTypesReal, List.class.getClassLoader());
-        this.currenciesReal = new ArrayList<PairedObject>();
-        in.readList(this.currenciesReal, List.class.getClassLoader());
-        this.regionsReal = new ArrayList<PairedObject>();
-        in.readList(this.regionsReal, List.class.getClassLoader());
-        this.citiesReal = new ArrayList<PairedObject>();
-        in.readList(this.citiesReal, List.class.getClassLoader());
+        this.organizations = in.createTypedArrayList(Organization.CREATOR);
+        this.orgTypesReal = in.createTypedArrayList(PairedObject.CREATOR);
+        this.currenciesReal = in.createTypedArrayList(PairedObject.CREATOR);
+        this.regionsReal = in.createTypedArrayList(PairedObject.CREATOR);
+        this.citiesReal = in.createTypedArrayList(PairedObject.CREATOR);
     }
 
-    public static final Creator<GlobalModel> CREATOR = new Creator<GlobalModel>() {
+    public static final Parcelable.Creator<GlobalModel> CREATOR = new Parcelable.Creator<GlobalModel>() {
         public GlobalModel createFromParcel(Parcel source) {
             return new GlobalModel(source);
         }

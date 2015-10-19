@@ -1,11 +1,11 @@
-package com.example.myapplication3.app.workers;
+package com.example.myapplication3.app.adapters;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.view.View;
-
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.GlobalModel;

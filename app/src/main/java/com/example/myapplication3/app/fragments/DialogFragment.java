@@ -10,19 +10,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
+import android.view.*;
 import android.widget.LinearLayout;
-
-import com.example.myapplication3.app.workers.Constants;
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
+import com.example.myapplication3.app.adapters.DrawView;
 import com.example.myapplication3.app.models.GlobalModel;
-import com.example.myapplication3.app.workers.DrawView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,8 +36,8 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
         rootView.findViewById(R.id.btn_share_DF).setOnClickListener(this);
 
         Bundle bundle = getArguments();
-        Gson gson = new GsonBuilder().create();
-        GlobalModel mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
+
+        GlobalModel mGlobalModel =  bundle.getParcelable(Constants.TAG_GLOBAL_MODEL) ;
         int position = bundle.getInt(Constants.TAG_POSITION);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();

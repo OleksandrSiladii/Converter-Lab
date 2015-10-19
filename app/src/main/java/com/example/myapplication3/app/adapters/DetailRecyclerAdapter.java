@@ -2,18 +2,18 @@ package com.example.myapplication3.app.adapters;
 
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import com.example.myapplication3.app.R;
-import com.example.myapplication3.app.workers.Constants;
-import java.util.List;
-
-import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
+import com.example.myapplication3.app.Constants;
+import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
 import com.example.myapplication3.app.models.PairedObject;
+
+import java.util.List;
 
 
 /**

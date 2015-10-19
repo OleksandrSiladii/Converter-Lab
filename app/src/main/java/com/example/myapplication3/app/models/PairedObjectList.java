@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by omar on 9/22/15.
  */
-public class PairedObjectList {
+public class PairedObjectList   {
     private List<PairedObject> list;
 
     public PairedObjectList(List<PairedObject> list) {
@@ -19,4 +19,6 @@ public class PairedObjectList {
     public void setList(List<PairedObject> list) {
         this.list = list;
     }
+
+
 }

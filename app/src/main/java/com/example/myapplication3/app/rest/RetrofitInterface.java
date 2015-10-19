@@ -1,8 +1,7 @@
 package com.example.myapplication3.app.rest;
 
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.models.GlobalModel;
-import com.example.myapplication3.app.workers.Constants;
-
 import retrofit.Callback;
 import retrofit.http.GET;
 

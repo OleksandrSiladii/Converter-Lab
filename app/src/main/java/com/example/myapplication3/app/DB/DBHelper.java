@@ -42,12 +42,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATA = "data";
 
 
-    private static final String SQL_CREATE_ENTRIES_GLOBAL_MADEL = "CREATE TABLE "
+    public static final String SQL_CREATE_ENTRIES_GLOBAL_MADEL = "CREATE TABLE "
             + TABLE_NAME_GLOBAL_MADEL + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + SOURCE_ID + " TEXT,"
             + DATA + " TEXT);";
 
-    private static final String SQL_CREATE_ENTRIES_ORGANIZATION = "CREATE TABLE "
+    public static final String SQL_CREATE_ENTRIES_ORGANIZATION = "CREATE TABLE "
             + TABLE_NAME_ORGANIZATION + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + ID + " TEXT,"
             + OLD_ID + " INTEGER,"
@@ -59,7 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + ADDRESS + " TEXT,"
             + LINK + " TEXT);";
 
-    private static final String SQL_CREATE_ENTRIES_CURRENCY1 = "CREATE TABLE "
+    public static final String SQL_CREATE_ENTRIES_CURRENCY1 = "CREATE TABLE "
             + TABLE_NAME_CURRENCY1 + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + ID + " TEXT,"
             + NAME_CURRENCY + " TEXT,"
@@ -68,7 +68,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + PREVIOUS_BID + " TEXT,"
             + BID + " TEXT);";
 
-    private static final String SQL_CREATE_ENTRIES_CURRENCY2 = "CREATE TABLE "
+    public static final String SQL_CREATE_ENTRIES_CURRENCY2 = "CREATE TABLE "
             + TABLE_NAME_CURRENCY2 + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + ID + " TEXT,"
             + NAME_CURRENCY + " TEXT,"
@@ -77,22 +77,22 @@ public class DBHelper extends SQLiteOpenHelper {
             + PREVIOUS_BID + " TEXT,"
             + BID + " TEXT);";
 
-    private static final String SQL_CREATE_ENTRIES_ORG_TYPES_REAL = "CREATE TABLE "
+    public static final String SQL_CREATE_ENTRIES_ORG_TYPES_REAL = "CREATE TABLE "
             + TABLE_NAME_ORG_TYPES_REAL + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + NAME + " TEXT,"
             + ID + " TEXT);";
 
-    private static final String SQL_CREATE_ENTRIES_CURRENCIES_REAL = "CREATE TABLE "
+    public static final String SQL_CREATE_ENTRIES_CURRENCIES_REAL = "CREATE TABLE "
             + TABLE_NAME_CURRENCIES_REAL + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + NAME + " TEXT,"
             + ID + " TEXT);";
 
-    private static final String SQL_CREATE_ENTRIES_REGION_REAL = "CREATE TABLE "
+    public static final String SQL_CREATE_ENTRIES_REGION_REAL = "CREATE TABLE "
             + TABLE_NAME_REGIONS_REAL + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + NAME + " TEXT,"
             + ID + " TEXT);";
 
-    private static final String SQL_CREATE_ENTRIES_CITIES_REAL = "CREATE TABLE "
+    public static final String SQL_CREATE_ENTRIES_CITIES_REAL = "CREATE TABLE "
             + TABLE_NAME_CITIES_REAL + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + NAME + " TEXT,"
             + ID + " TEXT);";

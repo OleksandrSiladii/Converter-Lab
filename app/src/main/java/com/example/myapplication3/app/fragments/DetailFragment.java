@@ -1,7 +1,6 @@
 package com.example.myapplication3.app.fragments;
 
 import android.app.Activity;
-
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,23 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.TextView;
-
-import com.example.myapplication3.app.adapters.DetailRecyclerAdapter;
-import com.example.myapplication3.app.workers.Constants;
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
+import com.example.myapplication3.app.adapters.DetailRecyclerAdapter;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -49,6 +40,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    public static DetailFragment getInstance(GlobalModel globalModel, int position){
+        Bundle mBundle = new Bundle();
+        mBundle.putParcelable(Constants.TAG_GLOBAL_MODEL, globalModel);
+        mBundle.putInt(Constants.TAG_POSITION, position);
+        DetailFragment detailFragment = new DetailFragment();
+        detailFragment.setArguments(mBundle);
+        return detailFragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -65,8 +65,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         btnMenu.setOnClickListener(this);
 
         Bundle bundle = getArguments();
-
-
 
         mGlobalModel =  bundle.getParcelable(Constants.TAG_GLOBAL_MODEL)  ;
         position = bundle.getInt(Constants.TAG_POSITION);
@@ -198,9 +196,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private void showDialog() {
         mDialogFragmentInfo = new DialogFragment();
         Bundle mBundle = new Bundle();
-        Gson gson = new GsonBuilder().create();
-        String json = gson.toJson(mGlobalModel);
-        mBundle.putString(Constants.TAG_GLOBAL_MODEL, json);
+        mBundle.putParcelable(Constants.TAG_GLOBAL_MODEL, mGlobalModel);
         mBundle.putInt(Constants.TAG_POSITION, position);
         mDialogFragmentInfo.setArguments(mBundle);
         mDialogFragmentInfo.show(getActivity().getFragmentManager(), Constants.TAG_FRAGMENT);

@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.example.myapplication3.app.workers.Constants;
-import com.example.myapplication3.app.workers.GeocoderLoader;
+import com.example.myapplication3.app.loaders.GeocoderLoader;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

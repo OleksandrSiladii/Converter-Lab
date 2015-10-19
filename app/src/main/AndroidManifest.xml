@@ -36,7 +36,7 @@
         </activity>
         <activity android:name=".MapsViewActivity" />
 
-        <service android:name=".workers.UpdatingService"></service>
+        <service android:name=".service.UpdatingService"></service>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -45,7 +45,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <receiver android:name=".workers.StartServiceReceiver" android:enabled="true" android:exported="false">
+        <receiver android:name=".service.StartServiceReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

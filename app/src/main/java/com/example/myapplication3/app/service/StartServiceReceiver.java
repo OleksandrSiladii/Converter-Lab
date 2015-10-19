@@ -1,4 +1,4 @@
-package com.example.myapplication3.app.workers;
+package com.example.myapplication3.app.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

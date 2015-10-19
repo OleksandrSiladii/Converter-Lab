@@ -1,10 +1,6 @@
-package com.example.myapplication3.app.workers;
+package com.example.myapplication3.app.service;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
+import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +10,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-
+import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.rest.RetrofitAdapter;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -31,9 +26,8 @@ import retrofit.client.Response;
 public class UpdatingService extends Service {
 
 
-    GlobalModel mGlobalModel;
-    DBWorker mDBWorker;
-    NotificationManager mNotificationManager;
+    private GlobalModel mGlobalModel;
+    private NotificationManager mNotificationManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -52,7 +46,7 @@ public class UpdatingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(Constants.TAG_LOG, "MyService onStartCommand");
 
-        mDBWorker = new DBWorker(getApplicationContext());
+        DBWorker dbWorker = DBWorker.getInstance(getApplicationContext());
 
         getGlobalModel();
         showNotification();
@@ -68,12 +62,12 @@ public class UpdatingService extends Service {
                 globalModel.deserializeAsync(globalModel, new GlobalModel.DeserializeCallback() {
                     @Override
                     public void onDeserialized(GlobalModel model) {
-                        if ((model == null) || !(model.getDate().equals(model.getDate()))) {
+                        if ((mGlobalModel == null) || !(mGlobalModel.getDate().equals(model.getDate()))) {
                             AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
                             addModelInDB.execute(model);
-                            Log.d(Constants.TAG_LOG, "add new model in DB asyncTask");
+
                         } else {
-                            Log.d(Constants.TAG_LOG, "new model and DB is same");
+
                             sendBroadcast(mGlobalModel);
                         }
                     }
@@ -91,14 +85,7 @@ public class UpdatingService extends Service {
 
     void showNotification() {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-        Notification notification = new NotificationCompat.Builder(this)
-                .setTicker(getResources().getString(R.string.DB_is_update))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(getResources().getString(R.string.DB_is_update))
-                .setContentText(getResources().getString(R.string.DB_update_OK))
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(false)
-                .build();
+        Notification notification = new NotificationCompat.Builder(this).setTicker(getResources().getString(R.string.DB_is_update)).setSmallIcon(R.mipmap.ic_launcher).setContentTitle(getResources().getString(R.string.DB_is_update)).setContentText(getResources().getString(R.string.DB_update_OK)).setContentIntent(pendingIntent).setAutoCancel(false).build();
 
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify(0, notification);
@@ -108,10 +95,10 @@ public class UpdatingService extends Service {
 
         @Override
         protected GlobalModel doInBackground(GlobalModel... globalModels) {
-            DBWorker mDBWorker = new DBWorker(getApplicationContext());
-            mDBWorker.addNewGlobalModelToDB(globalModels[0]);
+            DBWorker dbWorker = DBWorker.getInstance(getApplicationContext());
+            dbWorker.addNewGlobalModelToDB(globalModels[0]);
             GlobalModel globalModel = globalModels[0];
-            globalModel.setOrganizations(mDBWorker.getOrganizationList());
+            globalModel.setOrganizations(dbWorker.getOrganizationList());
             return globalModel;
         }
 
