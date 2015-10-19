@@ -64,10 +64,8 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
 
         if (mGlobalModel == null) {
             Bundle bundle = getArguments();
-            String json = bundle.getString(Constants.TAG_GLOBAL_MODEL);
-            Gson gson = new GsonBuilder().create();
-            mGlobalModel = gson.fromJson(json, GlobalModel.class);
-        }
+            mGlobalModel = bundle.getParcelable(Constants.TAG_GLOBAL_MODEL);
+         }
 
         mRecyclerView.setHasFixedSize(true);
 

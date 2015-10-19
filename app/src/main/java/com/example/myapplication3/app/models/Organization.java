@@ -1,5 +1,7 @@
 package com.example.myapplication3.app.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
@@ -9,7 +11,7 @@ import java.util.List;
 /**
  * Created by omar on 9/22/15.
  */
-public class Organization  {
+public class Organization implements Parcelable {
     private String id;
     private int oldId;
     private int orgType;
@@ -121,4 +123,51 @@ public class Organization  {
         currenciesReal = currencies;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeInt(this.oldId);
+        dest.writeInt(this.orgType);
+        dest.writeString(this.title);
+        dest.writeString(this.regionId);
+        dest.writeString(this.cityId);
+        dest.writeString(this.phone);
+        dest.writeString(this.address);
+        dest.writeString(this.link);
+        dest.writeList(this.currenciesReal);
+
+    }
+
+    public Organization() {
+    }
+
+    protected Organization(Parcel in) {
+        this.id = in.readString();
+        this.oldId = in.readInt();
+        this.orgType = in.readInt();
+        this.title = in.readString();
+        this.regionId = in.readString();
+        this.cityId = in.readString();
+        this.phone = in.readString();
+        this.address = in.readString();
+        this.link = in.readString();
+        this.currenciesReal = new ArrayList<Currency>();
+        in.readList(this.currenciesReal, List.class.getClassLoader());
+         
+    }
+
+    public static final Parcelable.Creator<Organization> CREATOR = new Parcelable.Creator<Organization>() {
+        public Organization createFromParcel(Parcel source) {
+            return new Organization(source);
+        }
+
+        public Organization[] newArray(int size) {
+            return new Organization[size];
+        }
+    };
 }

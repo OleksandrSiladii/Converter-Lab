@@ -65,8 +65,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         btnMenu.setOnClickListener(this);
 
         Bundle bundle = getArguments();
-        Gson gson = new GsonBuilder().create();
-        mGlobalModel = gson.fromJson(bundle.getString(Constants.TAG_GLOBAL_MODEL), GlobalModel.class);
+
+
+
+        mGlobalModel =  bundle.getParcelable(Constants.TAG_GLOBAL_MODEL)  ;
         position = bundle.getInt(Constants.TAG_POSITION);
         mOrganization = mGlobalModel.getOrganizations().get(position);
 

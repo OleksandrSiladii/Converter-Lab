@@ -59,9 +59,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
     private void goRecyclerViewFragment(GlobalModel globalModelFromDB) {
         mBundle = new Bundle();
-        Gson gson = new GsonBuilder().create();
-        String json = gson.toJson(globalModelFromDB);
-        mBundle.putString(Constants.TAG_GLOBAL_MODEL, json);
+        mBundle.putParcelable(Constants.TAG_GLOBAL_MODEL, globalModelFromDB);
         RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
         recyclerViewFragment.setArguments(mBundle);
         addFragment(recyclerViewFragment);
@@ -70,13 +68,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     @Override
     public void goDetailFragment(GlobalModel globalModel, int position) {
         mBundle = new Bundle();
-        Gson gson = new GsonBuilder().create();
-        String json = gson.toJson(globalModel);
-        mBundle.putString(Constants.TAG_GLOBAL_MODEL, json);
+        mBundle.putParcelable(Constants.TAG_GLOBAL_MODEL, globalModel);
         mBundle.putInt(Constants.TAG_POSITION, position);
         detailFragment = new DetailFragment();
         detailFragment.setArguments(mBundle);
-
         addFragment(detailFragment);
     }
 
@@ -163,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
             }
         };
         handler.sendEmptyMessage(WHAT);
-
     }
 
     @Override

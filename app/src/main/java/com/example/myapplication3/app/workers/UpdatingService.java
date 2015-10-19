@@ -20,8 +20,6 @@ import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.rest.RetrofitAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -67,16 +65,21 @@ public class UpdatingService extends Service {
         RetrofitAdapter.getInterface().getJson(new Callback<GlobalModel>() {
             @Override
             public void success(GlobalModel globalModel, Response response) {
-                globalModel.deserialize();
+                globalModel.deserializeAsync(globalModel, new GlobalModel.DeserializeCallback() {
+                    @Override
+                    public void onDeserialized(GlobalModel model) {
+                        if ((model == null) || !(model.getDate().equals(model.getDate()))) {
+                            AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
+                            addModelInDB.execute(model);
+                            Log.d(Constants.TAG_LOG, "add new model in DB asyncTask");
+                        } else {
+                            Log.d(Constants.TAG_LOG, "new model and DB is same");
+                            sendBroadcast(mGlobalModel);
+                        }
+                    }
+                });
 
-                if ((mGlobalModel == null) || !(mGlobalModel.getDate().equals(globalModel.getDate()))) {
-                    AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
-                    addModelInDB.execute(globalModel);
-                    Log.d(Constants.TAG_LOG, "add new model in DB asyncTask");
-                } else {
-                    Log.d(Constants.TAG_LOG, "new model and DB is same");
-                    sendBroadcast(mGlobalModel);
-                }
+
             }
 
             @Override
@@ -127,9 +130,8 @@ public class UpdatingService extends Service {
         Log.d(Constants.TAG_LOG, "send Broadcast from service with model");
 
         Bundle bundle = new Bundle();
-        Gson gson = new GsonBuilder().create();
-        String json = gson.toJson(globalModel);
-        bundle.putString(Constants.TAG_GLOBAL_MODEL, json);
+
+        bundle.putParcelable(Constants.TAG_GLOBAL_MODEL, globalModel);
         intent.putExtra(Constants.TAG_GLOBAL_MODEL, bundle);
 
         sendBroadcast(intent);
