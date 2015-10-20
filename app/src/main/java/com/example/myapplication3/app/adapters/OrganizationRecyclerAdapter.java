@@ -50,9 +50,7 @@ public class OrganizationRecyclerAdapter extends RecyclerView.Adapter<Organizati
 
         @Override
         public void onClick(View view) {
-
             myClickListener.onItemClick(getAdapterPosition(), view);
-
         }
     }
 
@@ -91,7 +89,6 @@ public class OrganizationRecyclerAdapter extends RecyclerView.Adapter<Organizati
 
     @Override
     public int getItemCount() {
-
         return mOrganizationList.size();
     }
 

@@ -2,13 +2,11 @@ package com.example.myapplication3.app.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.google.gson.JsonElement;
 
 import java.util.List;
 
-/**
- * Created by omar on 9/22/15.
- */
 public class GlobalModel implements Parcelable {
     private List<Organization> organizations;
     private JsonElement orgTypes;
@@ -23,7 +21,6 @@ public class GlobalModel implements Parcelable {
     private List<PairedObject> regionsReal;
     private List<PairedObject> citiesReal;
 
-
     public GlobalModel() {
     }
 
@@ -37,11 +34,9 @@ public class GlobalModel implements Parcelable {
         this.citiesReal = citiesReal;
     }
 
-
     public void setOrganizations(List<Organization> organizations) {
         this.organizations = organizations;
     }
-
 
     public void setOrgTypes(JsonElement orgTypes) {
         this.orgTypes = orgTypes;
@@ -111,11 +106,10 @@ public class GlobalModel implements Parcelable {
         this.date = date;
     }
 
-    public  boolean isDateIsNull(){
-        if (date == null)return true;
+    public boolean isDateIsNull() {
+        if (date == null) return true;
         else return false;
     }
-
 
     public void deserialize() {
         this.orgTypesReal = CustomDeserializer.getPairedObjectList(orgTypes);

@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class DBWorker {
 
-
     private DBHelper mDBHelper;
     private GlobalModel mGlobalModel;
     private Organization mOrganization;
@@ -137,15 +136,12 @@ public class DBWorker {
     private void updateDBCurrency() {
         Cursor cursor = mDB.query(DBHelper.TABLE_NAME_CURRENCY2, null, null, null, null, null, null);
         if (cursor.getCount() < 1) {
-            Log.d(Constants.TAG_LOG, "addCurrencyInTable2");
             addCurrencyInTable2();
         } else {
-            Log.d(Constants.TAG_LOG, "updateCurrencyInTable2");
             updateCurrencyInTable2();
         }
         updateCurrencyInMainTable();
         cursor.close();
-        Log.d(Constants.TAG_LOG, "updateCurrencyInMainTable");
     }
 
     private void updateCurrencyInMainTable() {
@@ -282,12 +278,9 @@ public class DBWorker {
 
     public Cursor getGlobalModelCursorFromDB() {
 
-
-
         openDB();
         closeDB();
         return mDB.query(DBHelper.TABLE_NAME_GLOBAL_MADEL, null, null, null, null, null, null);
-
     }
 
 
@@ -309,7 +302,6 @@ public class DBWorker {
     }
 
     public List<Organization> getOrganizationList() {
-
         openDB();
 
         Cursor cursor = mDB.query(DBHelper.TABLE_NAME_ORGANIZATION, null, null, null, null, null, null);

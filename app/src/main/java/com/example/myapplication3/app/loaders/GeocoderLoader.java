@@ -11,9 +11,6 @@ import com.example.myapplication3.app.Constants;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by sasha on 14.10.2015.
- */
 public class GeocoderLoader extends AsyncTaskLoader<List<Address>> {
     private String locationName;
 
@@ -27,7 +24,6 @@ public class GeocoderLoader extends AsyncTaskLoader<List<Address>> {
     public List<Address> loadInBackground() {
         Geocoder geocoder = new Geocoder(getContext());
         List<Address> addresses = null;
-        Log.d(Constants.TAG_LOG, "do LOADER G ;" + locationName);
 
         try {
             addresses = geocoder.getFromLocationName(locationName, 1);

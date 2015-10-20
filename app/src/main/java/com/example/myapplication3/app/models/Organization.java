@@ -2,15 +2,13 @@ package com.example.myapplication3.app.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by omar on 9/22/15.
- */
 public class Organization implements Parcelable {
     private String id;
     private int oldId;
@@ -25,7 +23,6 @@ public class Organization implements Parcelable {
 
     private JsonElement currencies;
 
-
     public void setCurrencies(JsonElement currencies) {
         this.currencies = currencies;
     }
@@ -34,7 +31,7 @@ public class Organization implements Parcelable {
         currenciesReal = new ArrayList<Currency>();
         List<PairedObject> list = CustomDeserializer.getPairedObjectList(currencies);
         for (PairedObject item : list) {
-            Currency.CurrencySmall small = new Gson().fromJson(item.getName(),  Currency.CurrencySmall.class);
+            Currency.CurrencySmall small = new Gson().fromJson(item.getName(), Currency.CurrencySmall.class);
             Currency currency = new Currency();
             currency.setNameCurrency(item.getId());
             currency.setAsk(small.getAsk());
@@ -42,7 +39,6 @@ public class Organization implements Parcelable {
             currenciesReal.add(currency);
         }
     }
-
 
     public String getId() {
         return id;
@@ -119,10 +115,10 @@ public class Organization implements Parcelable {
     public List<Currency> getCurrenciesReal() {
         return currenciesReal;
     }
-    public void setCurrenciesReal(List<Currency> currencies){
+
+    public void setCurrenciesReal(List<Currency> currencies) {
         currenciesReal = currencies;
     }
-
 
     @Override
     public int describeContents() {
@@ -141,7 +137,6 @@ public class Organization implements Parcelable {
         dest.writeString(this.address);
         dest.writeString(this.link);
         dest.writeTypedList(currenciesReal);
-
     }
 
     public Organization() {
@@ -158,7 +153,6 @@ public class Organization implements Parcelable {
         this.address = in.readString();
         this.link = in.readString();
         this.currenciesReal = in.createTypedArrayList(Currency.CREATOR);
-
     }
 
     public static final Parcelable.Creator<Organization> CREATOR = new Parcelable.Creator<Organization>() {

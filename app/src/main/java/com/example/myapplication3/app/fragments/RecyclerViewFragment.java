@@ -3,6 +3,7 @@ package com.example.myapplication3.app.fragments;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,9 +14,16 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.*;
+import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
+
 import android.widget.Toast;
 
 import com.example.myapplication3.app.Constants;
@@ -47,16 +55,13 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_FRV);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+        findViews(rootView);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorScheme(R.color.blue,
                 R.color.color_of_bank_name,
                 R.color.color_green_up,
                 R.color.black_semi_transparent);
-
 
         if (mGlobalModel == null) {
             Bundle bundle = getArguments();
@@ -75,6 +80,12 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         setHasOptionsMenu(true);
 
         return rootView;
+    }
+
+    private void findViews(View rootView) {
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_FRV);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
     }
 
     public void setModelInRecyclerView(final GlobalModel globalModel) {
@@ -144,18 +155,29 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     }
 
     public interface OnFragmentInteractionListener {
-
         public void goDetailFragment(GlobalModel globalModel, int position);
-
         public void goMapsFragment(GlobalModel globalModel, int position);
-
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_recycler_view_fragment, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search_menu).getActionView();
+        MenuItem searchItem = menu.findItem(R.id.action_search_menu);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        if (null != searchManager) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        }
         searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                setModelInRecyclerView(mGlobalModel);
+                hideSoftKeyboard();
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                                               public boolean onQueryTextChange(String text) {
                                                   getRezOfSearch(text);
@@ -178,8 +200,8 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
             String city = Constants.getRealName(mGlobalModel.getCitiesReal(), organization.getCityId());
             String region = Constants.getRealName(mGlobalModel.getRegionsReal(), organization.getRegionId());
 
-            if (organization.getTitle().contains(searchText) || organization.getAddress().contains(searchText)
-                    || city.contains(searchText) || region.contains(searchText)) {
+            if (organization.getTitle().toLowerCase().contains(searchText) || organization.getAddress().toLowerCase().contains(searchText)
+                    || city.toLowerCase().contains(searchText) || region.toLowerCase().contains(searchText)) {
                 organizations.add(organization);
             }
         }
@@ -224,5 +246,10 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         getActivity().registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
+    public void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive() && getActivity().getCurrentFocus() != null)
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+    }
 }
 

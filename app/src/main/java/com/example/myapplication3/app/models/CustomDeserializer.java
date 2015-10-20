@@ -7,11 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by omar on 9/22/15.
- */
 public class CustomDeserializer implements JsonDeserializer<PairedObjectList> {
-
 
     @Override
     public PairedObjectList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -26,7 +22,6 @@ public class CustomDeserializer implements JsonDeserializer<PairedObjectList> {
         }
         return new PairedObjectList(list);
     }
-
 
     public static  List<PairedObject> getPairedObjectList(JsonElement jsonElement)
     {

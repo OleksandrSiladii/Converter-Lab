@@ -4,9 +4,6 @@ import com.example.myapplication3.app.models.PairedObject;
 
 import java.util.List;
 
-/**
- * Created by sasha on 12.10.2015.
- */
 public class Constants {
     public static final String TAG_LOG = "myLog";
     public static final String TAG_GLOBAL_MODEL = "TAG_GLOBAL_MODEL";

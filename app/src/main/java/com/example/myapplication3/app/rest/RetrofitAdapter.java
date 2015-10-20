@@ -2,17 +2,13 @@ package com.example.myapplication3.app.rest;
 
 import com.example.myapplication3.app.Constants;
 import com.squareup.okhttp.OkHttpClient;
+
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by omar on 9/22/15.
- */
 public abstract class RetrofitAdapter {
-
-
 
     private static RetrofitInterface retrofitInterface;
     private static RestAdapter restAdapter;

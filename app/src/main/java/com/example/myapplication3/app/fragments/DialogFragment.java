@@ -4,15 +4,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.DisplayMetrics;
 import android.view.*;
-import android.widget.Button;
-import android.widget.LinearLayout;
+
 import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.adapters.DrawView;
@@ -28,62 +25,55 @@ import java.io.FileOutputStream;
 public class DialogFragment extends android.app.DialogFragment implements View.OnClickListener {
 
     private Bitmap mBitmap;
-    DrawView v;
+    private DrawView drawView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_dialog, container, false);
+        findViews(rootView);
 
+        setDataToDrawView();
+        return rootView;
+    }
+
+    private void findViews(View rootView) {
         rootView.findViewById(R.id.btn_share_DF).setOnClickListener(this);
-        v = (DrawView)rootView.findViewById(R.id.dv_FD);
+        drawView = (DrawView) rootView.findViewById(R.id.dv_FD);
+    }
 
+    private void setDataToDrawView() {
         Bundle bundle = getArguments();
-
-        GlobalModel mGlobalModel =  bundle.getParcelable(Constants.TAG_GLOBAL_MODEL) ;
+        GlobalModel mGlobalModel = bundle.getParcelable(Constants.TAG_GLOBAL_MODEL);
         int position = bundle.getInt(Constants.TAG_POSITION);
         Organization organization = mGlobalModel.getOrganizations().get(position);
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        v.setName(organization.getTitle());
-        v.setCity(organization.getCityId());
-        v.setRegion(organization.getRegionId());
-        v.setCurrencyList(organization.getCurrenciesReal());
-        return rootView;
+
+        drawView.setName(organization.getTitle());
+        drawView.setCity(Constants.getRealName(mGlobalModel.getCitiesReal(), organization.getCityId()));
+        drawView.setRegion(Constants.getRealName(mGlobalModel.getRegionsReal(), organization.getRegionId()));
+        drawView.setCurrencyList(organization.getCurrenciesReal());
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
     }
 
     private Bitmap getBitmapFromView(View view) {
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        DisplayMetrics metricsB = new DisplayMetrics();
-        display.getMetrics(metricsB);
-
-        view.measure((int) (metricsB.widthPixels * 0.8), LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        mBitmap = Bitmap.createBitmap(((int) (metricsB.widthPixels * 0.7)), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap( view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mBitmap);
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         view.draw(canvas);
         return mBitmap;
     }
 
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_share_DF) {
-            mBitmap = getBitmapFromView(v);
-
-            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                    "/bitmap.png";
-
+            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/bitmap.png";
+            mBitmap = getBitmapFromView(drawView);
             new AsyncTask<String, Void, File>() {
                 @Override
                 protected File doInBackground(String... strings) {
@@ -99,14 +89,12 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
                     }
                     return file;
                 }
-
                 @Override
                 protected void onPostExecute(File file) {
                     if (file.exists()) {
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType("image/jpg");
                         file.setReadable(true, false);
-//            Uri uri = Uri.fromFile(new File(getFilesDir(), "foo.jpg"));
                         Uri uri = Uri.fromFile(file);
                         dismiss();
                         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);

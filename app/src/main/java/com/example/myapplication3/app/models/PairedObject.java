@@ -3,10 +3,8 @@ package com.example.myapplication3.app.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by omar on 9/22/15.
- */
-public class PairedObject implements Parcelable{
+
+public class PairedObject implements Parcelable {
     private String name;
     private String id;
 

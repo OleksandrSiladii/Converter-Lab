@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:background="#fff">
 
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="wrap_content"
@@ -13,15 +12,12 @@
         android:layout_marginBottom="@dimen/scroll_view_margin"
         android:orientation="vertical">
 
+        <com.example.myapplication3.app.adapters.DrawView
+            android:id="@+id/dv_FD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-<com.example.myapplication3.app.adapters.DrawView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/dv_FD"/>
-
-
-
-     </ScrollView>
+    </ScrollView>
 
     <Button
         android:id="@+id/btn_share_DF"

@@ -3,9 +3,6 @@ package com.example.myapplication3.app.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by omar on 9/22/15.
- */
 public class Currency implements Parcelable {
 
     private String ask;
@@ -14,7 +11,6 @@ public class Currency implements Parcelable {
     private String id;
     private String previousAck = "0";
     private String previousBid = "100";
-
 
     public String getPreviousAck() {
         return previousAck;
@@ -64,9 +60,7 @@ public class Currency implements Parcelable {
         this.ask = ask;
     }
 
-
     public class CurrencySmall {
-
         private String ask;
         private String bid;
 
@@ -85,7 +79,6 @@ public class Currency implements Parcelable {
         public void setAsk(String ask) {
             this.ask = ask;
         }
-
     }
 
     @Override

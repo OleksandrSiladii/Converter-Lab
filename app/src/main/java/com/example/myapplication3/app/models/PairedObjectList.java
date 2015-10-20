@@ -2,9 +2,6 @@ package com.example.myapplication3.app.models;
 
 import java.util.List;
 
-/**
- * Created by omar on 9/22/15.
- */
 public class PairedObjectList   {
     private List<PairedObject> list;
 

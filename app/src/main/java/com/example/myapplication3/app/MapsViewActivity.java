@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.example.myapplication3.app.loaders.GeocoderLoader;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,9 +19,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-/**
- * Created by sasha on 07.10.2015.
- */
 public class MapsViewActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<List<Address>> {
     private GoogleMap mGoogleMap;
     private MarkerOptions markerOptions;
@@ -78,24 +76,22 @@ public class MapsViewActivity extends FragmentActivity implements LoaderManager.
     private void startLoader(String location) {
         Bundle bndl1 = new Bundle();
         bndl1.putString(Constants.TAG_LOCATION_NAME, location);
-        if(loader != null)
-        getLoaderManager().restartLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
+        if (loader != null)
+            getLoaderManager().restartLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
         else
-              getLoaderManager().initLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
+            getLoaderManager().initLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
     }
 
     @Override
     public Loader<List<Address>> onCreateLoader(int id, Bundle bundle) {
         if (id == Constants.LOADER_ID_2) {
             loader = new GeocoderLoader(getApplicationContext(), bundle);
-            Log.d(Constants.TAG_LOG, "start LOADER G");
         }
         return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<List<Address>> loader2, List<Address> addresses) {
-        Log.d(Constants.TAG_LOG, "end LOADER G");
         mGoogleMap.clear();
         if (addresses == null || addresses.size() == 0) {
             if (!ifTryAgain) {

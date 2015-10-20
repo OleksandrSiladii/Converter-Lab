@@ -2,12 +2,12 @@ package com.example.myapplication3.app.adapters;
 
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
@@ -16,9 +16,6 @@ import com.example.myapplication3.app.models.PairedObject;
 import java.util.List;
 
 
-/**
- * Created by sasha on 15.10.2015.
- */
 public class DetailRecyclerAdapter extends RecyclerView.Adapter<DetailRecyclerAdapter.ViewHolder> {
 
     private List<Currency> mCurrencies;
@@ -45,7 +42,6 @@ public class DetailRecyclerAdapter extends RecyclerView.Adapter<DetailRecyclerAd
     public DetailRecyclerAdapter(List<Currency> currencies, List<PairedObject> realNameCurrency) {
         mCurrencies = currencies;
         mRealNameCurrency = realNameCurrency;
-        Log.d(Constants.TAG_LOG, "create DetailRecyclerAdapter");
     }
 
     @Override
@@ -53,7 +49,6 @@ public class DetailRecyclerAdapter extends RecyclerView.Adapter<DetailRecyclerAd
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_currency, parent, false);
 
         ViewHolder vh = new ViewHolder(v);
-        Log.d(Constants.TAG_LOG, "create ViewHolder");
         return vh;
     }
 
@@ -69,7 +64,6 @@ public class DetailRecyclerAdapter extends RecyclerView.Adapter<DetailRecyclerAd
         holder.tvAsk.setText(ask);
         holder.tvmBid.setText(bid);
 
-        Log.d(Constants.TAG_LOG, "holder: "+currencyName);
 
         float fAsk = Float.parseFloat(currency.getAsk());
         float fOlgAsk = Float.parseFloat(currency.getPreviousAck());

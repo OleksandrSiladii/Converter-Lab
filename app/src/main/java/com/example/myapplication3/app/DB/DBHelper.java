@@ -41,7 +41,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String SOURCE_ID = "sourceId";
     public static final String DATA = "data";
 
-
     public static final String SQL_CREATE_ENTRIES_GLOBAL_MADEL = "CREATE TABLE "
             + TABLE_NAME_GLOBAL_MADEL + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + SOURCE_ID + " TEXT,"
@@ -111,8 +110,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ENTRIES_CURRENCIES_REAL);
         db.execSQL(SQL_CREATE_ENTRIES_REGION_REAL);
         db.execSQL(SQL_CREATE_ENTRIES_CITIES_REAL);
-        Log.d("qqq", "create all tables");
-
     }
 
     @Override

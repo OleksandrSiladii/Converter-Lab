@@ -10,10 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.example.myapplication3.app.fragments.DetailFragment;
 import com.example.myapplication3.app.fragments.RecyclerViewFragment;
 import com.example.myapplication3.app.loaders.GetModelFromDBLoader;
@@ -25,7 +25,6 @@ import com.example.myapplication3.app.service.UpdatingService;
 public class MainActivity extends AppCompatActivity implements RecyclerViewFragment.OnFragmentInteractionListener,
         DetailFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<GlobalModel> {
     private ActionBar actionBar;
-
     private Bundle mBundle;
 
     @Override
@@ -33,8 +32,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         getLoaderManager().initLoader(Constants.LOADER_ID_1, null, this).forceLoad();
-
+        getLoaderManager().initLoader(Constants.LOADER_ID_1, null, this).forceLoad();
         startUpdatingService();
         supportCustomActionBar();
     }
@@ -79,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
 
     private void addFragment(Fragment fragment) {
-        Log.d(Constants.TAG_LOG, "replace Fragment");
 
         if (!(fragment.isVisible())) {
             FragmentTransaction mFragmentTransaction = getFragmentManager().beginTransaction();
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
     public Loader<GlobalModel> onCreateLoader(int id, Bundle bundle) {
 
         if (id == Constants.LOADER_ID_1) {
-            return  new GetModelFromDBLoader(this);
+            return new GetModelFromDBLoader(this);
 
         }
         return null;
@@ -137,19 +134,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewFragm
 
     @Override
     public void onLoadFinished(Loader<GlobalModel> loader, final GlobalModel globalModel) {
-        Log.d(Constants.TAG_LOG,"end LOADER");
         final int WHAT = 1;
-        Handler handler = new Handler(){
+        Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(msg.what == WHAT) {
+                if (msg.what == WHAT) {
                     goRecyclerViewFragment(globalModel);
-                findViewById(R.id.pb_MA).setVisibility(View.INVISIBLE);}
+                    findViewById(R.id.pb_MA).setVisibility(View.INVISIBLE);
+                }
             }
         };
         handler.sendEmptyMessage(WHAT);
     }
 
     @Override
-    public void onLoaderReset(Loader<GlobalModel> loader) {}
+    public void onLoaderReset(Loader<GlobalModel> loader) {
+    }
 }

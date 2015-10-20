@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
+
 import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.adapters.DetailRecyclerAdapter;
@@ -40,39 +41,21 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public static DetailFragment getInstance(GlobalModel globalModel, int position){
-        Bundle mBundle = new Bundle();
-        mBundle.putParcelable(Constants.TAG_GLOBAL_MODEL, globalModel);
-        mBundle.putInt(Constants.TAG_POSITION, position);
-        DetailFragment detailFragment = new DetailFragment();
-        detailFragment.setArguments(mBundle);
-        return detailFragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        mTvBankName = (TextView) rootView.findViewById(R.id.tv_name_of_bank_SF);
-        mTvInformation = (TextView) rootView.findViewById(R.id.tv_information_SF);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_FD);
-        mRecyclerView.setHasFixedSize(true);
+        findViews(rootView);
 
-        rootView.findViewById(R.id.btn_call_FAB).setOnClickListener(this);
-        rootView.findViewById(R.id.btn_map_FAB).setOnClickListener(this);
-        rootView.findViewById(R.id.btn_link_FAB).setOnClickListener(this);
-        btnMenu = (FloatingActionButton) rootView.findViewById(R.id.pink_icon);
+        mRecyclerView.setHasFixedSize(true);
         btnMenu.setOnClickListener(this);
 
         Bundle bundle = getArguments();
-
-        mGlobalModel =  bundle.getParcelable(Constants.TAG_GLOBAL_MODEL)  ;
+        mGlobalModel = bundle.getParcelable(Constants.TAG_GLOBAL_MODEL);
         position = bundle.getInt(Constants.TAG_POSITION);
         mOrganization = mGlobalModel.getOrganizations().get(position);
-
         mTvBankName.setText(mOrganization.getTitle());
         mTvInformation.setText(getInformation());
-
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new DetailRecyclerAdapter(mOrganization.getCurrenciesReal(), mGlobalModel.getCurrenciesReal());
@@ -80,8 +63,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         mRecyclerView.setAdapter(mAdapter);
 
         setHasOptionsMenu(true);
-
-        menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
         menuMultipleActions.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
@@ -101,14 +82,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mGlobalModel.getOrganizations().get(position).getTitle());
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+    private void findViews(View rootView) {
+        mTvBankName = (TextView) rootView.findViewById(R.id.tv_name_of_bank_SF);
+        mTvInformation = (TextView) rootView.findViewById(R.id.tv_information_SF);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_FD);
+        btnMenu = (FloatingActionButton) rootView.findViewById(R.id.pink_icon);
+        menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
+        rootView.findViewById(R.id.btn_call_FAB).setOnClickListener(this);
+        rootView.findViewById(R.id.btn_map_FAB).setOnClickListener(this);
+        rootView.findViewById(R.id.btn_link_FAB).setOnClickListener(this);
     }
 
     @Override
@@ -164,11 +146,20 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         startActivity(intent);
     }
 
+    public static DetailFragment getInstance(GlobalModel globalModel, int position) {
+        Bundle mBundle = new Bundle();
+        mBundle.putParcelable(Constants.TAG_GLOBAL_MODEL, globalModel);
+        mBundle.putInt(Constants.TAG_POSITION, position);
+        DetailFragment detailFragment = new DetailFragment();
+        detailFragment.setArguments(mBundle);
+        return detailFragment;
+    }
+
     public interface OnFragmentInteractionListener {
 
         void goMapsFragment(GlobalModel globalModel, int position);
-    }
 
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_detail_fragment, menu);
@@ -181,6 +172,16 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             showDialog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mGlobalModel.getOrganizations().get(position).getTitle());
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
