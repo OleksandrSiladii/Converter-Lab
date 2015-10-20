@@ -72,7 +72,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     }
 
     public void setModelInRecyclerView(final GlobalModel globalModel) {
-
+        mSwipeRefreshLayout.setRefreshing(false);
         mAdapter = new OrganizationRecyclerAdapter(globalModel);
         mAdapter.notifyDataSetChanged();
 
@@ -210,7 +210,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                     Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
                 }
 
-                mSwipeRefreshLayout.setRefreshing(false);
+
 
 
 

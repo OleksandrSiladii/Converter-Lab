@@ -112,23 +112,14 @@ public class GlobalModel implements Parcelable {
     }
 
 
-    public static void deserializeAsync(final GlobalModel _model, final DeserializeCallback _callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    public void deserialize() {
+        this.orgTypesReal = CustomDeserializer.getPairedObjectList(orgTypes);
+        this.currenciesReal = CustomDeserializer.getPairedObjectList(currencies);
+        this.regionsReal = CustomDeserializer.getPairedObjectList(regions);
+        this.citiesReal = CustomDeserializer.getPairedObjectList(cities);
 
-                GlobalModel mModel = _model;
-                mModel.orgTypesReal = CustomDeserializer.getPairedObjectList(mModel.orgTypes);
-                mModel.currenciesReal = CustomDeserializer.getPairedObjectList(mModel.currencies);
-                mModel.regionsReal = CustomDeserializer.getPairedObjectList(mModel.regions);
-                mModel.citiesReal = CustomDeserializer.getPairedObjectList(mModel.cities);
-
-                for (Organization item : mModel.getOrganizations())
-                    item.deserialize();
-                _callback.onDeserialized(mModel);
-            }
-        }).start();
-
+        for (Organization item : organizations)
+            item.deserialize();
     }
 
     public interface DeserializeCallback {

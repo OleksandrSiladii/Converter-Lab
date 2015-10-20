@@ -59,19 +59,15 @@ public class UpdatingService extends Service {
         RetrofitAdapter.getInterface().getJson(new Callback<GlobalModel>() {
             @Override
             public void success(GlobalModel globalModel, Response response) {
-                globalModel.deserializeAsync(globalModel, new GlobalModel.DeserializeCallback() {
-                    @Override
-                    public void onDeserialized(GlobalModel model) {
-                        if ((mGlobalModel == null) || !(mGlobalModel.getDate().equals(model.getDate()))) {
-                            AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
-                            addModelInDB.execute(model);
 
-                        } else {
+                if ((mGlobalModel == null) || !(mGlobalModel.getDate().equals(globalModel.getDate()))) {
+                    AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
+                    addModelInDB.execute(globalModel);
 
-                            sendBroadcast(mGlobalModel);
-                        }
-                    }
-                });
+                } else {
+
+                    sendBroadcast(mGlobalModel);
+                }
 
 
             }
@@ -96,6 +92,7 @@ public class UpdatingService extends Service {
         @Override
         protected GlobalModel doInBackground(GlobalModel... globalModels) {
             DBWorker dbWorker = DBWorker.getInstance(getApplicationContext());
+            globalModels[0].deserialize();
             dbWorker.addNewGlobalModelToDB(globalModels[0]);
             GlobalModel globalModel = globalModels[0];
             globalModel.setOrganizations(dbWorker.getOrganizationList());
