@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.shppandroid1.app.MainActivity">
+    android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/pb_FRV"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_RVF"
+    <android.support.v4.widget.SwipeRefreshLayout
+
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_of_recyclerView"
-        android:scrollbars="vertical" />
+        tools:context="com.shppandroid1.app.MainActivity"
+        android:visibility="invisible">
 
-</android.support.v4.widget.SwipeRefreshLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_RVF"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_of_recyclerView"
+            android:scrollbars="vertical" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+</FrameLayout>

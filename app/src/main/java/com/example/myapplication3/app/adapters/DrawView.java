@@ -4,12 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
-import com.example.myapplication3.app.Constants;
+
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.Currency;
-import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
+
+import java.util.List;
 
 /**
  * Created by sasha on 15.10.2015.
@@ -18,60 +21,97 @@ public class DrawView extends View {
     private Organization organization;
     private String title, city, region;
     private Paint paint;
+    private List<Currency> currencies;
+    private int height = 33;
     private int wightCanvas;
-    private int q;
+    private int heightCanvas;
 
-    public DrawView(Context context, GlobalModel globalModel, int position, int wightDisplay) {
-        super(context);
-        this.wightCanvas = (int) (wightDisplay * 0.7);
-                getDataFromModel(globalModel, position);
 
+
+    public DrawView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         paint = new Paint();
     }
 
-    private void getDataFromModel(GlobalModel globalModel, int position) {
-        organization = globalModel.getOrganizations().get(position);
-        title = organization.getTitle();
-        city = Constants.getRealName(globalModel.getCitiesReal(), organization.getCityId());
-        region = Constants.getRealName(globalModel.getRegionsReal(), organization.getRegionId());
-        q = 220 + (80 * organization.getCurrenciesReal().size());
-        if (!city.contains(region)) q += 50;
+    public DrawView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context,attrs,defStyleAttr);
+        paint = new Paint();
     }
+
+    public  DrawView(Context context) {
+        super(context);
+        paint = new Paint();
+    }
+
+    public void setName(String name) {
+        title = name;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public void setCurrencyList(List<Currency> currencyList) {
+        currencies = currencyList;
+    }
+    //    public DrawView(Context context, GlobalModel globalModel, int position, int wightDisplay) {
+//        super(context);
+//        this.wightCanvas = (int) (wightDisplay * 0.7);
+//                getDataFromModel(globalModel, position);
+//
+//        paint = new Paint();
+//    }
+//    private void getDataFromModel(GlobalModel globalModel, int position) {
+//        organization = globalModel.getOrganizations().get(position);
+//        title = organization.getTitle();
+//        city = Constants.getRealName(globalModel.getCitiesReal(), organization.getCityId());
+//        region = Constants.getRealName(globalModel.getRegionsReal(), organization.getRegionId());
+//        q = 220 + (80 * organization.getCurrenciesReal().size());
+//        if (!city.contains(region)) q += 50;
+//    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(wightCanvas, q);
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        wightCanvas = 600;
+        heightCanvas = 700;
+        Log.d("qqq","wi: " +widthMeasureSpec);
+        Log.d("qqq","hi: " +heightMeasureSpec);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int wight = 0;
+
+        height = heightCanvas / 20;
         canvas.drawColor(getResources().getColor(R.color.color_of_cardView));
 
         paint.setColor(getResources().getColor(R.color.black));
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         paint.setTextSize(getResources().getDimension(R.dimen.text_size_name_of_bank));
-        canvas.drawText(title, (wightCanvas / 10), wight += 70, paint);
+        canvas.drawText(title, (wightCanvas / 10), height, paint);
 
         paint.setTextSize(getResources().getDimension(R.dimen.text_size_information));
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-        canvas.drawText(region, (wightCanvas / 11), wight += 50, paint);
+        canvas.drawText(region, (wightCanvas / 11), height += height, paint);
 
         if (!city.contains(region))
-            canvas.drawText(city, (wightCanvas / 11), wight += 50, paint);
+            canvas.drawText(city, (wightCanvas / 11), height += height, paint);
 
-        wight += 100;
         paint.setTextSize(getResources().getDimension(R.dimen.text_size_name_of_bank));
-        for (Currency currency : organization.getCurrenciesReal()) {
+
+        for (Currency currency : currencies) {
             String ask = currency.getAsk().substring(0, 5);
             String bid = currency.getBid().substring(0, 5);
 
             paint.setColor(getResources().getColor(R.color.color_red_down));
-            canvas.drawText(currency.getNameCurrency(), (wightCanvas / 8), wight, paint);
+            canvas.drawText(currency.getNameCurrency(), (wightCanvas / 8), height += height, paint);
 
             paint.setColor(getResources().getColor(R.color.color_text));
-            canvas.drawText(ask + "/" + bid, (wightCanvas / 2), wight, paint);
-            wight = wight + 80;
+            canvas.drawText(ask + "/" + bid, (wightCanvas / 2), height, paint);
         }
     }
 }

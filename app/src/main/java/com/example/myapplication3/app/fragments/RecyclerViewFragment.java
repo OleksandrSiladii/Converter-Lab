@@ -14,8 +14,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
+
 import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.adapters.OrganizationRecyclerAdapter;
@@ -35,6 +37,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ProgressBar mProgressBar;
     private GlobalModel mGlobalModel;
     private OnFragmentInteractionListener mListener;
     private BroadcastReceiver mBroadcastReceiver;
@@ -44,7 +47,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_FRV);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
@@ -58,8 +61,11 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         if (mGlobalModel == null) {
             Bundle bundle = getArguments();
             mGlobalModel = bundle.getParcelable(Constants.TAG_GLOBAL_MODEL);
-         }
-
+        }
+        if (!mGlobalModel.isDateIsNull()) {
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -205,18 +211,13 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
 
                 Bundle bundle = intent.getBundleExtra(Constants.TAG_GLOBAL_MODEL);
 
-                mGlobalModel =  bundle.getParcelable(Constants.TAG_GLOBAL_MODEL);
+                mGlobalModel = bundle.getParcelable(Constants.TAG_GLOBAL_MODEL);
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
-
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.INVISIBLE);
                 setModelInRecyclerView(mGlobalModel);
-
-
             }
         };
         IntentFilter intentFilter = new IntentFilter(Constants.TAG_BROADCAST_ACTION);

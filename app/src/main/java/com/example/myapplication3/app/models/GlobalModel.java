@@ -111,6 +111,11 @@ public class GlobalModel implements Parcelable {
         this.date = date;
     }
 
+    public  boolean isDateIsNull(){
+        if (date == null)return true;
+        else return false;
+    }
+
 
     public void deserialize() {
         this.orgTypesReal = CustomDeserializer.getPairedObjectList(orgTypes);

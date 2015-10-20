@@ -11,11 +11,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.*;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.adapters.DrawView;
 import com.example.myapplication3.app.models.GlobalModel;
+import com.example.myapplication3.app.models.Organization;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,26 +28,28 @@ import java.io.FileOutputStream;
 public class DialogFragment extends android.app.DialogFragment implements View.OnClickListener {
 
     private Bitmap mBitmap;
+    DrawView v;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_dialog, container, false);
-        LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.ll);
 
         rootView.findViewById(R.id.btn_share_DF).setOnClickListener(this);
+        v = (DrawView)rootView.findViewById(R.id.dv_FD);
 
         Bundle bundle = getArguments();
 
         GlobalModel mGlobalModel =  bundle.getParcelable(Constants.TAG_GLOBAL_MODEL) ;
         int position = bundle.getInt(Constants.TAG_POSITION);
+        Organization organization = mGlobalModel.getOrganizations().get(position);
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        DrawView v = new DrawView(getActivity(), mGlobalModel, position, size.x);
-
-        ll.addView(v);
-        mBitmap = getBitmapFromView(v);
+        v.setName(organization.getTitle());
+        v.setCity(organization.getCityId());
+        v.setRegion(organization.getRegionId());
+        v.setCurrencyList(organization.getCurrenciesReal());
         return rootView;
     }
 
@@ -75,6 +79,8 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_share_DF) {
+            mBitmap = getBitmapFromView(v);
+
             String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
                     "/bitmap.png";
 

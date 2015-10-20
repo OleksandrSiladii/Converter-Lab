@@ -7,26 +7,21 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="@dimen/scroll_view_margin"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/ll">
 
-        </LinearLayout>
 
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_bank_DF"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--/>-->
-    </ScrollView>
+<com.example.myapplication3.app.adapters.DrawView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/dv_FD"/>
+
+
+
+     </ScrollView>
 
     <Button
         android:id="@+id/btn_share_DF"
