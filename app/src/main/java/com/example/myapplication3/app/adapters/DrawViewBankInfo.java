@@ -15,24 +15,24 @@ import java.util.List;
 /**
  * Created by sasha on 15.10.2015.
  */
-public class DrawView extends View {
-    private String title = "qq", city = "qq", region = "qq";
+public class DrawViewBankInfo extends View {
+    private String title = "", city = "", region = "";
     private Paint paint;
     private List<Currency> currencies;
     private int height = 1;
     private int wightCanvas;
 
-    public DrawView(Context context, AttributeSet attrs) {
+    public DrawViewBankInfo(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
     }
 
-    public DrawView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public DrawViewBankInfo(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         paint = new Paint();
     }
 
-    public DrawView(Context context) {
+    public DrawViewBankInfo(Context context) {
         super(context);
         paint = new Paint();
     }

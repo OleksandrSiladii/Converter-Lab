@@ -12,7 +12,7 @@
         android:layout_marginBottom="@dimen/scroll_view_margin"
         android:orientation="vertical">
 
-        <com.example.myapplication3.app.adapters.DrawView
+        <com.example.myapplication3.app.adapters.DrawViewBankInfo
             android:id="@+id/dv_FD"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

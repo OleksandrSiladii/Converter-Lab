@@ -12,7 +12,7 @@ import android.view.*;
 
 import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.R;
-import com.example.myapplication3.app.adapters.DrawView;
+import com.example.myapplication3.app.adapters.DrawViewBankInfo;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.models.Organization;
 
@@ -25,7 +25,7 @@ import java.io.FileOutputStream;
 public class DialogFragment extends android.app.DialogFragment implements View.OnClickListener {
 
     private Bitmap mBitmap;
-    private DrawView drawView;
+    private DrawViewBankInfo drawViewBankInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
 
     private void findViews(View rootView) {
         rootView.findViewById(R.id.btn_share_DF).setOnClickListener(this);
-        drawView = (DrawView) rootView.findViewById(R.id.dv_FD);
+        drawViewBankInfo = (DrawViewBankInfo) rootView.findViewById(R.id.dv_FD);
     }
 
     private void setDataToDrawView() {
@@ -48,10 +48,10 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
         int position = bundle.getInt(Constants.TAG_POSITION);
         Organization organization = mGlobalModel.getOrganizations().get(position);
 
-        drawView.setName(organization.getTitle());
-        drawView.setCity(Constants.getRealName(mGlobalModel.getCitiesReal(), organization.getCityId()));
-        drawView.setRegion(Constants.getRealName(mGlobalModel.getRegionsReal(), organization.getRegionId()));
-        drawView.setCurrencyList(organization.getCurrenciesReal());
+        drawViewBankInfo.setName(organization.getTitle());
+        drawViewBankInfo.setCity(Constants.getRealName(mGlobalModel.getCitiesReal(), organization.getCityId()));
+        drawViewBankInfo.setRegion(Constants.getRealName(mGlobalModel.getRegionsReal(), organization.getRegionId()));
+        drawViewBankInfo.setCurrencyList(organization.getCurrenciesReal());
     }
 
     @Override
@@ -73,7 +73,7 @@ public class DialogFragment extends android.app.DialogFragment implements View.O
     public void onClick(View view) {
         if (view.getId() == R.id.btn_share_DF) {
             String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/bitmap.png";
-            mBitmap = getBitmapFromView(drawView);
+            mBitmap = getBitmapFromView(drawViewBankInfo);
             new AsyncTask<String, Void, File>() {
                 @Override
                 protected File doInBackground(String... strings) {
