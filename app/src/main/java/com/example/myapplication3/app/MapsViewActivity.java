@@ -23,7 +23,6 @@ public class MapsViewActivity extends FragmentActivity implements LoaderManager.
     private GoogleMap mGoogleMap;
     private MarkerOptions markerOptions;
     private LatLng latLng;
-    private Loader loader;
     Context context;
 
     private boolean ifTryAgain;
@@ -76,7 +75,7 @@ public class MapsViewActivity extends FragmentActivity implements LoaderManager.
     private void startLoader(String location) {
         Bundle bndl1 = new Bundle();
         bndl1.putString(Constants.TAG_LOCATION_NAME, location);
-        if (loader != null)
+        if (ifTryAgain)
             getLoaderManager().restartLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
         else
             getLoaderManager().initLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
@@ -85,9 +84,9 @@ public class MapsViewActivity extends FragmentActivity implements LoaderManager.
     @Override
     public Loader<List<Address>> onCreateLoader(int id, Bundle bundle) {
         if (id == Constants.LOADER_ID_2) {
-            loader = new GeocoderLoader(getApplicationContext(), bundle);
+            new GeocoderLoader(getApplicationContext(), bundle);
         }
-        return loader;
+        return new GeocoderLoader(getApplicationContext(), bundle);
     }
 
     @Override

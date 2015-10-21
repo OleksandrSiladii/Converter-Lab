@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+
 import com.example.myapplication3.app.Constants;
 import com.example.myapplication3.app.DB.DBWorker;
 import com.example.myapplication3.app.MainActivity;
 import com.example.myapplication3.app.R;
 import com.example.myapplication3.app.models.GlobalModel;
 import com.example.myapplication3.app.rest.RetrofitAdapter;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -25,7 +27,6 @@ import retrofit.client.Response;
  */
 public class UpdatingService extends Service {
 
-
     private GlobalModel mGlobalModel;
     private NotificationManager mNotificationManager;
 
@@ -34,18 +35,14 @@ public class UpdatingService extends Service {
         return null;
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         regBroadcastReceiver();
         startAlarmManager();
-
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(Constants.TAG_LOG, "MyService onStartCommand");
-
         DBWorker dbWorker = DBWorker.getInstance(getApplicationContext());
 
         getGlobalModel();
@@ -63,14 +60,10 @@ public class UpdatingService extends Service {
                 if ((mGlobalModel == null) || !(mGlobalModel.getDate().equals(globalModel.getDate()))) {
                     AddModelInDBAsyncTask addModelInDB = new AddModelInDBAsyncTask();
                     addModelInDB.execute(globalModel);
-
                 } else {
-
                     sendBroadcast(mGlobalModel);
                 }
-
-
-            }
+           }
 
             @Override
             public void failure(RetrofitError error) {
@@ -102,7 +95,6 @@ public class UpdatingService extends Service {
         @Override
         protected void onPostExecute(GlobalModel globalModel) {
             super.onPostExecute(globalModel);
-
             mGlobalModel = globalModel;
             sendBroadcast(globalModel);
         }
@@ -111,13 +103,9 @@ public class UpdatingService extends Service {
     private void sendBroadcast(GlobalModel globalModel) {
         mNotificationManager.cancelAll();
         Intent intent = new Intent(Constants.TAG_BROADCAST_ACTION);
-        Log.d(Constants.TAG_LOG, "send Broadcast from service with model");
-
         Bundle bundle = new Bundle();
-
         bundle.putParcelable(Constants.TAG_GLOBAL_MODEL, globalModel);
         intent.putExtra(Constants.TAG_GLOBAL_MODEL, bundle);
-
         sendBroadcast(intent);
     }
 
@@ -133,7 +121,6 @@ public class UpdatingService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 getGlobalModel();
-                Log.d(Constants.TAG_LOG, "alarm");
             }
         };
         IntentFilter intentFilter = new IntentFilter(Constants.TAG_ALARM_ACTION);

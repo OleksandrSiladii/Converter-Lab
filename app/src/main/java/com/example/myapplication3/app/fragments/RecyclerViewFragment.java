@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,11 +58,6 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         findViews(rootView);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorScheme(R.color.blue,
-                R.color.color_of_bank_name,
-                R.color.color_green_up,
-                R.color.black_semi_transparent);
 
         if (mGlobalModel == null) {
             Bundle bundle = getArguments();
@@ -86,6 +82,11 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_FRV);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_RVF);
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorScheme(R.color.blue,
+                R.color.color_of_bank_name,
+                R.color.color_green_up,
+                R.color.black_semi_transparent);
     }
 
     public void setModelInRecyclerView(final GlobalModel globalModel) {
@@ -140,6 +141,7 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
+
         mSwipeRefreshLayout.setRefreshing(true);
         Intent intent = new Intent(getActivity(), UpdatingService.class);
         getActivity().startService(intent);
@@ -234,12 +236,16 @@ public class RecyclerViewFragment extends Fragment implements SwipeRefreshLayout
                 Bundle bundle = intent.getBundleExtra(Constants.TAG_GLOBAL_MODEL);
 
                 mGlobalModel = bundle.getParcelable(Constants.TAG_GLOBAL_MODEL);
-                if (mSwipeRefreshLayout.isRefreshing()) {
-                    Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
-                }
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                mProgressBar.setVisibility(View.INVISIBLE);
-                setModelInRecyclerView(mGlobalModel);
+                if (!(mSwipeRefreshLayout == null)) {
+                    if (mSwipeRefreshLayout.isRefreshing()) {
+                        Toast.makeText(getActivity(), getString(R.string.DB_is_update), Toast.LENGTH_SHORT).show();
+                    }
+
+                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                    mProgressBar.setVisibility(View.INVISIBLE);}
+                    Log.d("qqq", "mBroadcastReceiver");
+                    setModelInRecyclerView(mGlobalModel);
+
             }
         };
         IntentFilter intentFilter = new IntentFilter(Constants.TAG_BROADCAST_ACTION);
