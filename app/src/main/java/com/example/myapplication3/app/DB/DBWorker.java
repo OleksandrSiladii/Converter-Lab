@@ -75,7 +75,7 @@ public class DBWorker {
         addNewDataInRealTables(DBHelper.TABLE_NAME_CITIES_REAL, mGlobalModel.getCitiesReal());
         addNewDataInRealTables(DBHelper.TABLE_NAME_REGIONS_REAL, mGlobalModel.getRegionsReal());
         addNewDataInRealTables(DBHelper.TABLE_NAME_CURRENCIES_REAL, mGlobalModel.getCurrenciesReal());
-        addNewDataInRealTables(DBHelper.TABLE_NAME_ORG_TYPES_REAL, mGlobalModel.getCurrenciesReal());
+        addNewDataInRealTables(DBHelper.TABLE_NAME_ORG_TYPES_REAL, mGlobalModel.getOrgTypes());
     }
 
     private void addNewDataInRealTables(String tableName, List<PairedObject> pairedObjectList) {

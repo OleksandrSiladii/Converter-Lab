@@ -85,7 +85,7 @@ public class UpdatingService extends Service {
         @Override
         protected GlobalModel doInBackground(GlobalModel... globalModels) {
             DBWorker dbWorker = DBWorker.getInstance(getApplicationContext());
-            globalModels[0].deserialize();
+//            globalModels[0].deserialize();
             dbWorker.addNewGlobalModelToDB(globalModels[0]);
             GlobalModel globalModel = globalModels[0];
             globalModel.setOrganizations(dbWorker.getOrganizationList());

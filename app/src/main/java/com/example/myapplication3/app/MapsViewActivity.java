@@ -73,12 +73,12 @@ public class MapsViewActivity extends FragmentActivity implements LoaderManager.
     }
 
     private void startLoader(String location) {
-        Bundle bndl1 = new Bundle();
-        bndl1.putString(Constants.TAG_LOCATION_NAME, location);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.TAG_LOCATION_NAME, location);
         if (ifTryAgain)
-            getLoaderManager().restartLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
+            getLoaderManager().restartLoader(Constants.LOADER_ID_2, bundle, this).forceLoad();
         else
-            getLoaderManager().initLoader(Constants.LOADER_ID_2, bndl1, this).forceLoad();
+            getLoaderManager().initLoader(Constants.LOADER_ID_2, bundle, this).forceLoad();
     }
 
     @Override

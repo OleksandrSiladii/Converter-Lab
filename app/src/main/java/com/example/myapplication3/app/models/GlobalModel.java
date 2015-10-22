@@ -2,20 +2,12 @@ package com.example.myapplication3.app.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.gson.JsonElement;
-
 import java.util.List;
 
 public class GlobalModel implements Parcelable {
     private List<Organization> organizations;
-    private JsonElement orgTypes;
-    private JsonElement currencies;
-    private JsonElement regions;
-    private JsonElement cities;
     private String sourceId;
     private String date;
-
     private List<PairedObject> orgTypesReal;
     private List<PairedObject> currenciesReal;
     private List<PairedObject> regionsReal;
@@ -38,21 +30,6 @@ public class GlobalModel implements Parcelable {
         this.organizations = organizations;
     }
 
-    public void setOrgTypes(JsonElement orgTypes) {
-        this.orgTypes = orgTypes;
-    }
-
-    public void setCurrencies(JsonElement currencies) {
-        this.currencies = currencies;
-    }
-
-    public void setRegions(JsonElement regionsJSon) {
-        this.regions = regionsJSon;
-    }
-
-    public void setCities(JsonElement citiesJSon) {
-        this.cities = citiesJSon;
-    }
 
     public List<Organization> getOrganizations() {
         return organizations;
@@ -111,19 +88,19 @@ public class GlobalModel implements Parcelable {
         else return false;
     }
 
-    public void deserialize() {
-        this.orgTypesReal = CustomDeserializer.getPairedObjectList(orgTypes);
-        this.currenciesReal = CustomDeserializer.getPairedObjectList(currencies);
-        this.regionsReal = CustomDeserializer.getPairedObjectList(regions);
-        this.citiesReal = CustomDeserializer.getPairedObjectList(cities);
-
-        for (Organization item : organizations)
-            item.deserialize();
-    }
-
-    public interface DeserializeCallback {
-        void onDeserialized(GlobalModel model);
-    }
+//    public void deserialize() {
+//        this.orgTypesReal = CustomDeserializer.getPairedObjectList(orgTypes);
+//        this.currenciesReal = CustomDeserializer.getPairedObjectList(currencies);
+//        this.regionsReal = CustomDeserializer.getPairedObjectList(regions);
+//        this.citiesReal = CustomDeserializer.getPairedObjectList(cities);
+//
+//        for (Organization item : organizations)
+//            item.deserialize();
+//    }
+//
+//    public interface DeserializeCallback {
+//        void onDeserialized(GlobalModel model);
+//    }
 
     @Override
     public int describeContents() {
