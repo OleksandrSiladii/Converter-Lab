@@ -29,6 +29,7 @@ public class UpdatingService extends Service {
 
     private GlobalModel mGlobalModel;
     private NotificationManager mNotificationManager;
+    private AlarmManager alarmManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -40,10 +41,10 @@ public class UpdatingService extends Service {
         super.onCreate();
         regBroadcastReceiver();
         startAlarmManager();
+
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        DBWorker dbWorker = DBWorker.getInstance(getApplicationContext());
 
         getGlobalModel();
         showNotification();
@@ -52,7 +53,6 @@ public class UpdatingService extends Service {
     }
 
     private void getGlobalModel() {
-
         RetrofitAdapter.getInterface().getJson(new Callback<GlobalModel>() {
             @Override
             public void success(GlobalModel globalModel, Response response) {
@@ -63,7 +63,7 @@ public class UpdatingService extends Service {
                 } else {
                     sendBroadcast(mGlobalModel);
                 }
-           }
+            }
 
             @Override
             public void failure(RetrofitError error) {
@@ -71,6 +71,7 @@ public class UpdatingService extends Service {
             }
         });
     }
+
 
     void showNotification() {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
@@ -110,10 +111,12 @@ public class UpdatingService extends Service {
     }
 
     private void startAlarmManager() {
-        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(Constants.TAG_ALARM_ACTION);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1800000, pendingIntent);
+        if (alarmManager == null) {
+            alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(Constants.TAG_ALARM_ACTION);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1800000, pendingIntent);
+        }
     }
 
     private void regBroadcastReceiver() {

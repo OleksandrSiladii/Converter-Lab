@@ -43,9 +43,13 @@ public class CustomJsonDeserializer implements JsonDeserializer<GlobalModel> {
                     organization.setTitle(jsonOrganization.get("title").getAsString());
                     organization.setRegionId(jsonOrganization.get("regionId").getAsString());
                     organization.setCityId(jsonOrganization.get("cityId").getAsString());
-                    organization.setPhone(jsonOrganization.get("phone").getAsString());
                     organization.setAddress(jsonOrganization.get("address").getAsString());
                     organization.setLink(jsonOrganization.get("link").getAsString());
+                    try {
+                        organization.setPhone(jsonOrganization.get("phone").getAsString());
+                    } catch (Exception e) {
+                        organization.setPhone(" no phone ");
+                    }
 
                     JsonObject jsonCurrencies = jsonOrganization.get("currencies").getAsJsonObject();
 
